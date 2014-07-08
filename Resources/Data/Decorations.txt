@@ -1,0 +1,175 @@
+{
+  "decorations": [
+    {
+      "name": "pooltable",
+      "displayname": "Pool Table",
+      "displayrect": "{{0, 0}, {96, 144}}",
+      "collisionrect": "{{0, 0}, {92, 144}}"
+    },
+    {
+      "name": "bptable",
+      "displayname": "BP Table",
+      "displayrect": "{{96, 0}, {96, 144}}",
+      "collisionrect": "{{0, 0}, {96, 144}}"
+    },
+    {
+      "name": "studytable",
+      "displayname": "Study Table",
+      "displayrect": "{{0, 168}, {120, 120}}",
+      "collisionrect": "{{0, 0}, {104, 104}}"
+    },
+    {
+      "name": "twosink1",
+      "displayname": "Sink 1",
+      "displayrect": "{{144, 222}, {120, 60}}",
+      "collisionrect": "{{0, 0}, {120, 36}}",
+      "use": {
+        "usestyle": "sequential",
+        "usepositions": [
+          "{0,-25}",
+          "{-15,-18}"
+        ],
+        "userotation": 0,
+        "usetime": 2.5
+      }
+    },
+    {
+      "name": "couch1",
+      "displayname": "Couch 1",
+      "displayrect": "{{144, 168}, {120, 48}}",
+      "collisionrect": "{{0, 0}, {108, 48}}",
+      "trigger": "onuse",
+      "use": {
+        "usestyle": "sequential",
+        "usepositions": [
+          "{0,-24}",
+          "{-10,-6}"
+        ],
+        "userotation": 180
+      }
+    },
+    {
+      "name": "smallstall",
+      "displayname": "Small Stall",
+      "displayrect": "{{312, 72}, {48, 96}}",
+      "collisionrect": "{{0, 0}, {48, 96}}",
+      "trigger": "onuse",
+      "use": {
+        "usestyle": "sequential",
+        "usepositions": [
+          "{0,-36}",
+          "{0, -6}"
+        ],
+        "userotation": 0,
+        "usetime": 3
+      }
+    },
+    {
+      "name": "bigstall",
+      "displayname": "Big Stall",
+      "displayrect": "{{384, 72}, {72, 144}}",
+      "collisionrect": "{{0, 0}, {72, 144}}",
+      "trigger": "onuse",
+      "use": {
+        "usestyle": "sequential",
+        "usepositions": [
+          "{27,-24}",
+          "{-4,-24}",
+          "{0, 6}"
+        ],
+        "userotation": 0,
+        "usetime": 3,
+        "particles": {
+          "position": "{0,-22}",
+          "startcolor": 0
+        }
+      }
+    },
+    {
+      "name": "redrug",
+      "displayname": "Red Rug",
+      "displayrect": "{{0, 312}, {168, 168}}"
+    },
+    {
+      "name": "texastable",
+      "displayname": "End Table",
+      "displayrect": "{{192, 312}, {54, 54}}",
+      "collisionrect": "{{0, 0}, {54, 54}}"
+    },
+    {
+      "name": "refrigerator",
+      "displayname": "Refrigerator",
+      "displayrect": "{{192, 436}, {60, 60}}",
+      "collisionrect": "{{0, 0}, {60, 48}}"
+    },
+    {
+      "name": "keg",
+      "displayname": "Keg",
+      "displayrect": "{{192, 384}, {52, 52}}",
+      "collisioncircle": "{{0, 0}, {11, 0}}"
+    },
+    {
+      "name": "barstraight",
+      "displayname": "Bar Straight Piece",
+      "displayrect": "{{0, 504}, {78, 96}}",
+      "collisionrect": "{{0, 0}, {78, 96}}"
+    },
+    {
+      "name": "barcorner",
+      "displayname": "Bar Corner Piece",
+      "displayrect": "{{96, 504}, {98, 78}}",
+      "collisionrect": "{{0, 0}, {96, 78}}"
+    },
+    {
+      "name": "storageshelf1",
+      "displayname": "Storage Shelf 1",
+      "displayrect": "{{480, 0}, {144, 44}}",
+      "collisionrect": "{{0, 0}, {144, 36}}"
+    },
+    {
+      "name": "storageshelf2",
+      "displayname": "Storage Shelf 2",
+      "displayrect": "{{480, 48}, {144, 44}}",
+      "collisionrect": "{{0, 0}, {144, 36}}"
+    },
+    {
+      "name": "stairwell1",
+      "displayname": "Stairwell 1",
+      "displayrect": "{{0, 624}, {240, 96}}",
+      "collisionrect": "{{0, 0}, {240, 96}}",
+      "collision": "NO",
+      "use": {
+        "usestyle": "sequential-link",
+        "usepositions": [
+          "{62, 9}",
+          "{-30, 9}",
+          "{-44, 4}",
+          "{-49, -10}"
+        ]
+      }
+    },
+    {
+      "name": "stairwell2",
+      "displayname": "Stairwell 2",
+      "displayrect": "{{0, 720}, {240, 96}}",
+      "collisionrect": "{{0, 0}, {240, 96}}",
+      "collision": "NO",
+      "use": {
+        "usestyle": "sequential",
+        "usepositions": [
+          "{-49, 9}",
+          "{-45, -5}",
+          "{-30, -9}",
+          "{49, -9}"
+        ],
+        "userotation": 90
+      }
+    },
+    {
+      "name": "stairwellbannister",
+      "displayname": "Stairwell Bannister",
+      "displayrect": "{{0, 840}, {172, 24}}"
+    }
+
+  ]
+}

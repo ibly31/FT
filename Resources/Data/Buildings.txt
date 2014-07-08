@@ -1,0 +1,106 @@
+{
+  "buildings": [
+    {
+      "name": "frat1",
+      "displayrect": "{{0, 34}, {64, 64}}",
+      "width": 2,
+      "height": 2
+    },
+    {
+      "name": "frat2",
+      "displayrect": "{{68, 34}, {96, 64}}",
+      "width": 3,
+      "height": 2
+    },
+    {
+      "name": "frat3",
+      "displayrect": "{{170, 34}, {96, 96}}",
+      "width": 3,
+      "height": 3
+    },
+    {
+      "name": "soro1",
+      "displayrect": "{{0, 136}, {64, 64}}",
+      "width": 2,
+      "height": 2
+    },
+    {
+      "name": "soro2",
+      "displayrect": "{{68, 136}, {96, 64}}",
+      "width": 3,
+      "height": 2
+    },
+    {
+      "name": "soro3",
+      "displayrect": "{{170, 136}, {96, 96}}",
+      "width": 3,
+      "height": 3
+    },
+    {
+      "name": "apartment1",
+      "displayrect": "{{306, 0}, {96, 64}}",
+      "width": 3,
+      "height": 2
+    },
+    {
+      "name": "apartment2",
+      "displayrect": "{{408, 0}, {64, 96}}",
+      "width": 2,
+      "height": 3
+    },
+    {
+      "name": "apartment3",
+      "displayrect": "{{476, 0}, {128, 64}}",
+      "width": 4,
+      "height": 2
+    },
+    {
+      "name": "apartment4",
+      "displayrect": "{{612, 0}, {64, 128}}",
+      "width": 2,
+      "height": 4
+    },
+    {
+      "name": "parkinglot1",
+      "displayrect": "{{306, 102}, {64, 64}}",
+      "width": 2,
+      "height": 2
+    },
+    {
+      "name": "parkinglot2",
+      "displayrect": "{{374, 102}, {96, 64}}",
+      "width": 3,
+      "height": 2
+    },
+    {
+      "name": "parkinglot3",
+      "displayrect": "{{476, 102}, {64, 96}}",
+      "width": 2,
+      "height": 3
+    },
+    {
+      "name": "house1",
+      "displayrect": "{{306, 170}, {32, 32}}",
+      "width": 1,
+      "height": 1
+    },
+    {
+      "name": "house2",
+      "displayrect": "{{340, 170}, {32, 32}}",
+      "width": 1,
+      "height": 1
+    },
+    {
+      "name": "house3",
+      "displayrect": "{{374, 170}, {32, 32}}",
+      "width": 1,
+      "height": 1
+    },
+    {
+      "name": "baseballfield1",
+      "displayrect": "{{578, 136}, {96, 96}}",
+      "width": 3,
+      "height": 3
+    }
+  ]
+}

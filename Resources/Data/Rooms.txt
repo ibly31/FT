@@ -1,0 +1,338 @@
+{
+  "rooms": [
+    {
+      "name": "study1",
+      "displayname": "Study",
+      "blueprintname": "STUDY",
+      "blueprintnameloc": "{72,26}",
+      "blueprintnamesize": 22,
+      "cost": 1200,
+      "width": 6,
+      "height": 5,
+      "decorations": [
+        {
+          "decName": "studytable",
+          "x": 60,
+          "y": 70,
+          "rot": 0
+        },
+        {
+          "decName": "couch1",
+          "x": 118,
+          "y": 78,
+          "rot": 90
+        }
+      ],
+      "doorwayzones": [
+        [
+          "11,1",
+          "11,2",
+          "11,3"
+        ]
+      ]
+    },
+    {
+      "name": "common1",
+      "displayname": "Common Room",
+      "blueprintname": "COMMON ROOM",
+      "blueprintnameloc": "{216,40}",
+      "blueprintnamesize": 24,
+      "cost": 17000,
+      "width": 18,
+      "height": 12,
+      "decorations": [
+        {
+          "decName": "pooltable",
+          "x": 60,
+          "y": 108,
+          "rot": 0
+        },
+        {
+          "decName": "bptable",
+          "x": 156,
+          "y": 108,
+          "rot": 0
+        },
+        {
+          "decName": "bptable",
+          "x": 120,
+          "y": 202,
+          "rot": 90
+        },
+        {
+          "decName": "bptable",
+          "x": 216,
+          "y": 202,
+          "rot": 90
+        },
+        {
+          "decName": "couch1",
+          "x": 216,
+          "y": 262,
+          "rot": 180
+        },
+        {
+          "decName": "couch1",
+          "x": 120,
+          "y": 262,
+          "rot": 180
+        },
+        {
+          "decName": "barstraight",
+          "x": 373,
+          "y": 156,
+          "rot": 0
+        },
+        {
+          "decName": "barstraight",
+          "x": 373,
+          "y": 204,
+          "rot": 0
+        },
+        {
+          "decName": "barstraight",
+          "x": 373,
+          "y": 252,
+          "rot": 0
+        },
+        {
+          "decName": "barstraight",
+          "x": 373,
+          "y": 121,
+          "rot": 0
+        },
+        {
+          "decName": "barcorner",
+          "x": 378,
+          "y": 82,
+          "rot": 0
+        },
+        {
+          "decName": "keg",
+          "x": 403,
+          "y": 193,
+          "rot": 0
+        },
+        {
+          "decName": "keg",
+          "x": 403,
+          "y": 168,
+          "rot": 0
+        },
+        {
+          "decName": "refrigerator",
+          "x": 404,
+          "y": 263,
+          "rot": 0
+        }
+      ],
+      "doorwayzones": [
+        [
+          "0,1",
+          "0,2",
+          "0,3",
+          "0,4"
+        ],
+        [
+          "0,19",
+          "0,20",
+          "0,21",
+          "0,22"
+        ],
+        [
+          "35,1",
+          "35,2",
+          "35,3",
+          "35,4"
+        ],
+        [
+          "34,0",
+          "33,0",
+          "32,0",
+          "31,0"
+        ],
+        [
+          "1,23",
+          "2,23",
+          "3,23",
+          "4,23"
+        ]
+      ]
+    },
+    {
+      "name": "bathrooms1",
+      "displayname": "Bathrooms",
+      "blueprintname": "BATHROOM",
+      "blueprintnameloc": "{72,72}",
+      "blueprintnamesize": 18,
+      "cost": 2300,
+      "width": 6,
+      "height": 4,
+      "xsubs": 1,
+      "ysubs": 2,
+      "subflip": "vertical",
+      "decorations": [
+        {
+          "decName": "bigstall",
+          "x": 30,
+          "y": 48,
+          "rot": 0
+        },
+        {
+          "decName": "smallstall",
+          "x": 60,
+          "y": 36,
+          "rot": 0
+        },
+        {
+          "decName": "twosink1",
+          "x": 102,
+          "y": 27,
+          "rot": 0
+        }
+      ],
+      "doorwayzones": [
+        [
+          "11,4",
+          "11,5",
+          "11,6"
+        ]
+      ]
+    },
+    {
+      "name": "hallway1",
+      "displayname": "Hallway",
+      "cost": 200,
+      "width": 3,
+      "height": 3,
+      "doorwayzones": [
+        [
+          "0,0",
+          "1,0",
+          "2,0",
+          "3,0",
+          "4,0",
+          "5,0"
+        ],
+        [
+          "0,5",
+          "1,5",
+          "2,5",
+          "3,5",
+          "4,5",
+          "5,5"
+        ],
+        [
+          "0,1",
+          "0,2",
+          "0,3",
+          "0,4"
+        ],
+        [
+          "5,1",
+          "5,2",
+          "5,3",
+          "5,4"
+        ]
+      ]
+    },
+    {
+      "name": "stairwayup",
+      "displayname": "Stairway Up",
+      "cost": 1200,
+      "width": 6,
+      "height": 5,
+      "decorations": [
+        {
+          "decName": "stairwell1",
+          "x": 72,
+          "y": 36,
+          "rot": 0
+        },
+        {
+          "decName": "stairwell2",
+          "x": 72,
+          "y": 84,
+          "rot": 0
+        },
+        {
+          "decName": "stairwellbannister",
+          "x": 91,
+          "y": 60,
+          "rot": 0
+        }
+      ],
+      "doorwayzones": [
+        [
+          "11,1",
+          "11,2",
+          "11,3",
+          "11,4"
+        ]
+      ]
+    },
+    {
+      "name": "storage",
+      "displayname": "Storage",
+      "cost": 400,
+      "width": 6,
+      "height": 3,
+      "decorations": [
+        {
+          "decName": "storageshelf1",
+          "x": 47,
+          "y": 23,
+          "rot": 0
+        },
+        {
+          "decName": "storageshelf2",
+          "x": 47,
+          "y": 49,
+          "rot": 0
+        }
+      ],
+      "doorwayzones": [
+        [
+          "9,1",
+          "9,2",
+          "9,3"
+        ]
+      ]
+    },
+    {
+      "name": "pool",
+      "displayname": "Pool",
+      "cost": 14000,
+      "width": 12,
+      "height": 8
+    },
+    {
+      "name": "empty",
+      "displayname": "Empty",
+      "cost": 120500,
+      "width": 3,
+      "height": 3
+    },
+    {
+      "name": "empty2",
+      "displayname": "Empty",
+      "cost": 120500,
+      "width": 5,
+      "height": 5
+    },
+    {
+      "name": "empty3",
+      "displayname": "Empty",
+      "cost": 120500,
+      "width": 7,
+      "height": 7
+    },
+    {
+      "name": "empty4",
+      "displayname": "Empty",
+      "cost": 120500,
+      "width": 9,
+      "height": 9
+    }
+  ]
+}

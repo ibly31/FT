@@ -1,0 +1,266 @@
+{
+  "frats": [
+    {
+      "letters": "ajaj",
+      "nickname": "Acacia"
+    },
+    {
+      "letters": "acq",
+      "nickname": "AGR"
+    },
+    {
+      "letters": "adu"
+    },
+    {
+      "letters": "aep"
+    },
+    {
+      "letters": "ajk"
+    },
+    {
+      "letters": "aru"
+    },
+    {
+      "letters": "asx"
+    },
+    {
+      "letters": "aud",
+      "nickname": "APD"
+    },
+    {
+      "letters": "avq",
+      "nickname": "Crow"
+    },
+    {
+      "letters": "bhp",
+      "nickname": "Beta"
+    },
+    {
+      "letters": "bvh"
+    },
+    {
+      "letters": "dv"
+    },
+    {
+      "letters": "dje",
+      "nickname": "Deke"
+    },
+    {
+      "letters": "dru"
+    },
+    {
+      "letters": "dsd",
+      "nickname": "Delt"
+    },
+    {
+      "letters": "fbs"
+    },
+    {
+      "letters": "fw"
+    },
+    {
+      "letters": "hn"
+    },
+    {
+      "letters": "hv"
+    },
+    {
+      "letters": "hdv"
+    },
+    {
+      "letters": "ja"
+    },
+    {
+      "letters": "jaw"
+    },
+    {
+      "letters": "jdq",
+      "nickname": "KDR"
+    },
+    {
+      "letters": "jjw"
+    },
+    {
+      "letters": "khu",
+      "nickname": "Lambda"
+    },
+    {
+      "letters": "krt",
+      "nickname": "LSU"
+    },
+    {
+      "letters": "kue",
+      "nickname": "LFE"
+    },
+    {
+      "letters": "kva"
+    },
+    {
+      "letters": "maj"
+    },
+    {
+      "letters": "pja",
+      "nickname": "Pike"
+    },
+    {
+      "letters": "pju",
+      "nickname": "Pi Kapp"
+    },
+    {
+      "letters": "pku",
+      "nickname": "Pi Lam"
+    },
+    {
+      "letters": "rae",
+      "nickname": "SAE"
+    },
+    {
+      "letters": "ral",
+      "nickname": "Sammy"
+    },
+    {
+      "letters": "rm"
+    },
+    {
+      "letters": "rp"
+    },
+    {
+      "letters": "rud"
+    },
+    {
+      "letters": "rue",
+      "nickname": "Sig Ep"
+    },
+    {
+      "letters": "rv"
+    },
+    {
+      "letters": "rsc"
+    },
+    {
+      "letters": "sje",
+      "nickname": "Teke"
+    },
+    {
+      "letters": "ubr"
+    },
+    {
+      "letters": "ucd",
+      "nickname": "FIJI"
+    },
+    {
+      "letters": "udh",
+      "nickname": "Phi Delt"
+    },
+    {
+      "letters": "uia",
+      "nickname": "Phiota"
+    },
+    {
+      "letters": "ujh"
+    },
+    {
+      "letters": "ujr"
+    },
+    {
+      "letters": "ujs"
+    },
+    {
+      "letters": "ujw"
+    },
+    {
+      "letters": "urj"
+    }
+  ],
+  "soros": [
+    {
+      "letters": "avx",
+      "nickname": "A Chi O"
+    },
+    {
+      "letters": "adp"
+    },
+    {
+      "letters": "acd",
+      "nickname": "AGD"
+    },
+    {
+      "letters": "aeu"
+    },
+    {
+      "letters": "aop"
+    },
+    {
+      "letters": "au"
+    },
+    {
+      "letters": "ara",
+      "nickname": "ASA"
+    },
+    {
+      "letters": "ars"
+    },
+    {
+      "letters": "and",
+      "nickname": "AZD"
+    },
+    {
+      "letters": "cub"
+    },
+    {
+      "letters": "ddd",
+      "nickname": "Tri Delt"
+    },
+    {
+      "letters": "df",
+      "nickname": "DG"
+    },
+    {
+      "letters": "due"
+    },
+    {
+      "letters": "fsa",
+      "nickname": "Zeta"
+    },
+    {
+      "letters": "hua"
+    },
+    {
+      "letters": "jah",
+      "nickname": "Theta"
+    },
+    {
+      "letters": "jd",
+      "nickname": "KD"
+    },
+    {
+      "letters": "jjc",
+      "nickname": "Kappa"
+    },
+    {
+      "letters": "pbu",
+      "nickname": "Pi Phi"
+    },
+    {
+      "letters": "rds",
+      "nickname": "SDT"
+    },
+    {
+      "letters": "rj"
+    },
+    {
+      "letters": "rrr",
+      "nickname": "Tri Sigma"
+    },
+    {
+      "letters": "ul"
+    },
+    {
+      "letters": "urr"
+    },
+    {
+      "letters": "vx",
+      "nickname": "Chi O"
+    }
+  ]
+}

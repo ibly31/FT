@@ -1,0 +1,84 @@
+{
+  "levels": [
+    {
+      "levelName": "Main Floor",
+      "rooms": [
+        {
+          "roomName": "storage",
+          "x": 3,
+          "y": 5
+        },
+        {
+          "roomName": "bathrooms1",
+          "x": 3,
+          "y": 8
+        },
+        {
+          "roomName": "common1",
+          "x": 12,
+          "y": 3
+        },
+        {
+          "roomName": "study1",
+          "x": 3,
+          "y": 16,
+        },
+        {
+          "roomName": "stairwayup",
+          "x": 3,
+          "y": 21
+        },
+        {
+          "roomName": "storage",
+          "x": 14,
+          "y": 22
+        },
+        {
+          "roomName": "hallway1",
+          "x": 9,
+          "y": 3
+        },
+        {
+          "roomName": "hallway1",
+          "x": 9,
+          "y": 6
+        },
+        {
+          "roomName": "hallway1",
+          "x": 9,
+          "y": 9
+        },
+        {
+          "roomName": "hallway1",
+          "x": 9,
+          "y": 12
+        },
+        {
+          "roomName": "hallway1",
+          "x": 9,
+          "y": 15
+        },
+        {
+          "roomName": "hallway1",
+          "x": 9,
+          "y": 18
+        },
+        {
+          "roomName": "hallway1",
+          "x": 9,
+          "y": 21
+        }
+      ]
+    },
+    {
+      "levelName": "Second Floor",
+      "rooms": [
+        {
+          "roomName": "common1",
+          "x": 3,
+          "y": 3
+        }
+      ]
+    }
+  ]
+}
