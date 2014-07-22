@@ -169,7 +169,38 @@
       "name": "stairwellbannister",
       "displayname": "Stairwell Bannister",
       "displayrect": "{{0, 840}, {172, 24}}"
+    },
+    {
+      "name": "punchcooler1",
+      "displayname": "Punch Cooler",
+      "displayrect": "{{288, 384}, {48, 48}}",
+      "collisioncircle": "{{0, 0}, {12, 0}}",
+      "use": {
+        "usestyle": "getdrink",
+        "useposition": "{-20, 0}",
+        "userotation": 90,
+        "usetime": 2.0
+      },
+      "drinks": {
+        "drinktype": "mixed",
+        "drinkcount": 100
+      }
+    },
+    {
+      "name": "beertub1",
+      "displayname": "Beer Tub",
+      "displayrect": "{{360, 384}, {82, 144}}",
+      "collisionrect": "{{0, 0}, {82, 144}}",
+      "use": {
+        "usestyle": "getdrink",
+        "useposition": "{-30, 0}",
+        "userotation": 90,
+        "usetime": 0.5
+      },
+      "drinks": {
+        "drinktype": "can",
+        "drinkcount": 200
+      }
     }
-
   ]
 }

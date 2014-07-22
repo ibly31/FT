@@ -10,6 +10,7 @@
 #import "CampusScene.h"
 #import "GameScene.h"
 #import "CCButton.h"
+#import "GameScene.h"
 
 @implementation MainMenuScene
 

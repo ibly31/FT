@@ -8,6 +8,7 @@
 
 #import "GameScene.h"
 #import "EditorScene.h"
+#import "FTPhysicsDebugNode.h"
 
 @implementation GameScene
 @synthesize houseNode;
@@ -35,7 +36,7 @@
         
         levelStack = [[FTLevelStack alloc] initWithLevels: @[@"l1",@"l2"]];
         [levelStack setDelegate: houseNode];
-        [levelStack setPosition: ccp([[CCDirector sharedDirector] viewSize].width - 100, [[CCDirector sharedDirector] viewSize].height - 65)];
+        [levelStack setPosition: ccp([[CCDirector sharedDirector] viewSize].width - 30, [[CCDirector sharedDirector] viewSize].height - 65)];
         [self addChild: levelStack];
         
         [levelStack setCurrentLevel: 0];
@@ -48,9 +49,22 @@
         [backButton setBackgroundSpriteFrame:[CCSpriteFrame frameWithImageNamed:@"Button.png"] forState:CCControlStateNormal];
         [backButton setBackgroundColor:[CCColor lightGrayColor] forState:CCControlStateHighlighted];
         [backButton setTarget:self selector:@selector(goBack)];
-        [backButton setPosition: ccp(45, [[CCDirector sharedDirector] viewSize].height - 39)];
+        [backButton setPosition: ccp(5, [[CCDirector sharedDirector] viewSize].height - 5)];
+        [backButton setAnchorPoint: ccp(0, 1)];
         [backButton setZoomWhenHighlighted: NO];
         [self addChild: backButton z:2];
+        
+        debugButton = [CCButton buttonWithTitle:@"Debug" fontName:@"Palatino" fontSize:24];
+        [debugButton setHorizontalPadding: 10];
+        [debugButton setVerticalPadding: 5];
+        [debugButton setLabelColor:[CCColor blackColor] forState:CCControlStateNormal];
+        [debugButton setLabelColor:[CCColor blackColor] forState:CCControlStateHighlighted];
+        [debugButton setBackgroundSpriteFrame:[CCSpriteFrame frameWithImageNamed:@"Button.png"] forState:CCControlStateNormal];
+        [debugButton setTarget:self selector:@selector(toggleDebug)];
+        [debugButton setPosition: ccp(5, [[CCDirector sharedDirector] viewSize].height - 50)];
+        [debugButton setAnchorPoint: ccp(0, 1)];
+        [debugButton setZoomWhenHighlighted: NO];
+        [self addChild: debugButton z: 2];
         
         [self setContentSize: [[CCDirector sharedDirector] viewSize]];
         [self setUserInteractionEnabled: YES];
@@ -66,6 +80,11 @@
 
 - (void)goBack{
     [[CCDirector sharedDirector] popSceneWithTransition:[CCTransition transitionCrossFadeWithDuration: 0.5f]];
+}
+
+- (void)toggleDebug{
+    FTPhysicsDebugNode *debugNode = [[houseNode peopleNode] debugNode];
+    [debugNode setVisible: ![debugNode visible]];
 }
 
 - (void)touchBegan:(UITouch *)touch withEvent:(UIEvent *)event{
@@ -100,6 +119,8 @@
     if((![personPopup showing] || !CGRectContainsPoint(CGRectMake(0, 0, [[CCDirector sharedDirector] viewSize].width, 140), loc))){
         if(CFAbsoluteTimeGetCurrent() - tapTime < 0.25 && ccpLength(ccpSub(loc, panStartLocation)) < 10){
             CGPoint mapLoc = [houseNode convertToNodeSpace: ccpMidpoint(loc, panStartLocation)]; // average both to eliminate error
+            
+            NSLog(@"Tap at %@", NSStringFromCGPoint(mapLoc));
             
             NSDictionary *decAt = [houseNode decorationAtTapLocation: mapLoc];
             

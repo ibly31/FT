@@ -67,6 +67,7 @@
         [self addChild: slider];
         NSLog(@"Slider size: %f %f", sliderSize.width, sliderSize.height);
         
+        [self setContentSize: sliderSize];
         [self setUserInteractionEnabled: YES];
     }
     return self;

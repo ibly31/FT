@@ -46,6 +46,7 @@
         [self addChild: sicknessQuantity];
         
         [self setUserInteractionEnabled: YES];
+        [self setContentSize: CGSizeMake(320, 140)];
         
         showing = NO;
     }

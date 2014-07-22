@@ -25,7 +25,7 @@
     NSDictionary *currentSelectedRoom;
     int currentLevel;
     
-    CCSprite *backButton;
+    CCButton *backButton;
     
     CCSprite *deleteIcon;
     CCSprite *moveIcon;
@@ -50,6 +50,8 @@
     CCNode *house;
     FTStructureNode *structureNode;
 }
+
+@property (nonatomic, retain) FTStructureNode *structureNode;
 
 + (CCScene *) scene;
 

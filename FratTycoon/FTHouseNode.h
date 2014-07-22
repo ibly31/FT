@@ -16,6 +16,8 @@
 @class GameScene;
 
 @interface FTHouseNode : CCNode <FTLevelStackDelegate>{
+    CCNodeColor *background;
+    
     FTPeopleNode *peopleNode;
     FTDecorationNode *decorationNode;
     FTStructureNode *structureNode;

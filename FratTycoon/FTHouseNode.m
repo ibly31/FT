@@ -24,6 +24,9 @@
     if(self){
         self.gameScene = gs;
         
+        background = [[CCNodeColor alloc] initWithColor:[CCColor grayColor] width:HOUSELOT_WIDTH * 24 height:HOUSELOT_HEIGHT * 24];
+        [self addChild:background z:0];
+        
         self.structureNode = [[FTStructureNode alloc] initWithWidth:HOUSELOT_WIDTH * 2 height:HOUSELOT_HEIGHT * 2 blueprint:NO];
         
         self.width = HOUSELOT_WIDTH;
@@ -42,7 +45,7 @@
         [self addChild: floorMapNode];
         [self addChild: structureNode];
         [self addChild: decorationNode];
-        //[self addChild: peopleNode];
+        [self addChild: peopleNode];
     }
     return self;
 }
@@ -134,9 +137,7 @@
                 }
             }
         }
-        
-        //[self flattenHouseAndRender];
-        
+
         /*for(int y = 0; y < HOUSELOT_HEIGHT * 2; y++){
             for(int x = 0; x < HOUSELOT_WIDTH * 2; x++){
                 int grayscale = 255 - min(openWeights[y][x] * 255 / 30.0f, 255);
@@ -168,23 +169,6 @@
             }
         }*/
     }
-}
-
-- (void)flattenHouseAndRender{
-    
-    CCNode *node = [CCNode node];
-    [node addChild:floorMapNode];
-    [node addChild:structureNode];
-    
-    CCRenderTexture *render = [CCRenderTexture renderTextureWithWidth:width * 24 height:height * 24 pixelFormat:CCTexturePixelFormat_Default];
-    [render begin];
-    [node visit];
-    [render end];
-    [node removeChild: floorMapNode];
-    [node removeChild: structureNode];
-    
-    CCSprite *renderSprite = [CCSprite spriteWithTexture: [render sprite].texture];
-    [self addChild: renderSprite];
 }
 
 - (void)addRoom:(NSString *)roomName x:(int)xx y:(int)yy rot:(int)rot{
@@ -499,7 +483,9 @@
 }
 
 - (NSDictionary *)decorationAtTapLocation:(CGPoint)tap{
-    for(NSDictionary *decDict in [decorationNode decorations]){
+    // Search backwards to find decorations on top first
+    for(int i = (int)[[decorationNode decorations] count] - 1; i >= 0; i--){
+        NSDictionary *decDict = [[decorationNode decorations] objectAtIndex: i];
         if(CGRectContainsPoint([(CCSprite *)[decDict objectForKey:@"sprite"] boundingBox], tap)){
             return decDict;
         }

@@ -25,6 +25,7 @@
     int selectedPerson;
     
     CCButton *backButton;
+    CCButton *debugButton;
 }
 
 + (CCScene *) scene;

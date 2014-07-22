@@ -18,4 +18,7 @@
 #define NUM_FRATS 16
 #define NUM_SOROS 16
 
+#define WALK_FORCE 2000
+#define STAND_FORCE 200
+
 #endif

@@ -12,6 +12,7 @@
 #import "GameScene.h"
 
 @implementation EditorScene
+@synthesize structureNode;
 
 +(CCScene *) scene{
 	CCScene *scene = [CCScene node];
@@ -29,19 +30,21 @@
         FTEditorBlueprint *blueprint = [[FTEditorBlueprint alloc] initWithWidth:HOUSELOT_WIDTH height:HOUSELOT_HEIGHT];
         [blueprint setAnchorPoint: ccp(0,1)];
         
-        structureNode = [[FTStructureNode alloc] initWithWidth:HOUSELOT_WIDTH * 2 height:HOUSELOT_HEIGHT * 2 blueprint:YES];
+        self.structureNode = [[FTStructureNode alloc] initWithWidth:HOUSELOT_WIDTH height:HOUSELOT_HEIGHT range:NSRangeFromString(@"60-4")];;
         [structureNode setScale: EDITOR_SCALE];
         
         house = [[CCNode alloc] init];
-        [house addChild: blueprint];
-        [house addChild: structureNode];
+        [house addChild:blueprint z:0];
+        [house addChild:structureNode z:1];
+        
+        //[self addChild:structureNode z:3];
         
         levels = CFBridgingRelease(CFPropertyListCreateDeepCopy(nil, (CFPropertyListRef)[[[FTModel sharedModel] currentHouseData] objectForKey:@"levels"], kCFPropertyListMutableContainersAndLeaves));
         
         currentLevel = 0;
-        [self readCurrentLevel];
+        //[self readCurrentLevel];
         
-        [self updateStructureNode];
+        //[self updateStructureNode];
         
         [house setPosition: ccp(12, 70)];
         [self addChild: house z:2];
@@ -72,9 +75,18 @@
         [topBarBackground setPosition: ccp(0, [[CCDirector sharedDirector] viewSize].height - 60)];
         //[self addChild: topBarBackground z:6];
         
-        backButton = [CCSprite spriteWithTexture:[CCTexture textureWithFile:@"GUI.png"] rect:CGRectMake(128, 0, 70, 34)];
-        [backButton setPosition: ccp(39, [[CCDirector sharedDirector] viewSize].height - 39)];
-        [self addChild: backButton z: 7];
+        backButton = [CCButton buttonWithTitle:@"Back" fontName:@"Palatino" fontSize:28];
+        [backButton setHorizontalPadding: 10];
+        [backButton setVerticalPadding: 5];
+        [backButton setLabelColor:[CCColor blackColor] forState:CCControlStateNormal];
+        [backButton setLabelColor:[CCColor blackColor] forState:CCControlStateHighlighted];
+        [backButton setBackgroundSpriteFrame:[CCSpriteFrame frameWithImageNamed:@"Button.png"] forState:CCControlStateNormal];
+        [backButton setBackgroundColor:[CCColor lightGrayColor] forState:CCControlStateHighlighted];
+        [backButton setTarget:self selector:@selector(goBack)];
+        [backButton setPosition: ccp(5, [[CCDirector sharedDirector] viewSize].height - 5)];
+        [backButton setAnchorPoint: ccp(0, 1)];
+        [backButton setZoomWhenHighlighted: NO];
+        [self addChild: backButton z:7];
         
         /*NSMutableArray *levelMenuArray = [[NSMutableArray alloc] init];
         int index = 0;
@@ -118,6 +130,11 @@
     return self;
 }
 
+- (void)goBack{
+    [self saveCurrentLevel];
+    [[CCDirector sharedDirector] replaceScene:[GameScene scene] withTransition:[CCTransition transitionCrossFadeWithDuration:0.5f]];
+}
+
 - (void)readCurrentLevel{
     currentRooms = [[NSMutableArray alloc] init];
     
@@ -154,10 +171,14 @@
         [roomSprite setPosition: ccp(roomX * 24 * EDITOR_SCALE + [roomSprite boundingBox].size.width / 2, (HOUSELOT_HEIGHT - roomY) * 24 * EDITOR_SCALE - [roomSprite boundingBox].size.height / 2)];
         [roomDef setObject:roomSprite forKey:@"sprite"];
         [currentRooms addObject: roomDef];
-        [house addChild: roomSprite];
+        [house addChild: roomSprite z:2];
         
         roomID++;
     }
+}
+
+- (void)draw{
+    [super draw];
 }
 
 - (void)levelMenuTap:(CCNode *)sender{
@@ -215,6 +236,53 @@ int wrapAndAddAngle(int angle, int add){
     NSMutableDictionary *houseData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:levels, @"levels", nil];
     [[FTModel sharedModel] setCurrentHouseData: houseData];
 
+}
+
+- (void)updateStructureNode{
+    //[structureNode clearAllTiles];
+    
+    int roomID = 0;
+    for(NSMutableDictionary *room in currentRooms){
+        int roomX = [[room objectForKey: @"x"] intValue];
+        int roomY = [[room objectForKey: @"y"] intValue];
+        int roomW = [[room objectForKey: @"width"] intValue];
+        int roomH = [[room objectForKey: @"height"] intValue];
+        int roomRot = [[room objectForKey: @"rot"] intValue];
+        
+        if(roomRot == 90 || roomRot == -90 || roomRot == 270){
+            int temp = roomW;
+            roomW = roomH;
+            roomH = temp;
+        }
+        
+        BOOL subs = ([room objectForKey:@"xsubs"] != nil);
+        
+        if(subs){
+            int xsubs = [[room objectForKey: @"xsubs"] intValue];
+            int ysubs = [[room objectForKey: @"ysubs"] intValue];
+            
+            if(roomRot == 90 || roomRot == -90 || roomRot == 270){
+                int temp = xsubs;
+                xsubs = ysubs;
+                ysubs = temp;
+            }
+            
+            for(int x = 0; x < xsubs; x++){
+                for(int y = 0; y < ysubs; y++){
+                    [structureNode createWallRectangle:roomX + x * roomW y:roomY + y * roomH width:roomW height:roomH roomID:roomID roomName:[room objectForKey:@"name"]];
+                }
+            }
+        }else{
+            [structureNode createWallRectangle:roomX y:roomY width:roomW height:roomH roomID:roomID roomName:[room objectForKey:@"name"]];
+        }
+        
+        roomID++;
+    }
+    
+    [structureNode removeDoorways: currentRooms];
+    [structureNode removeDoubleWalls: currentRooms];
+    [structureNode removeSingles];
+    [structureNode correctWallOrientations];
 }
 
 - (void)beginDragDropFrom:(CGPoint)from to:(CGPoint)to withStartScale:(float)startScale withRoomName:(NSString *)roomName{
@@ -335,52 +403,46 @@ int wrapAndAddAngle(int angle, int add){
 
     if(panning){
         if(CFAbsoluteTimeGetCurrent() - tapTime < 0.25 && ccpLength(ccpSub(loc, panStartLocation)) < 10){
-            if([[CCDirector sharedDirector] viewSize].height - loc.y < 40){
-                if(CGRectContainsPoint([backButton boundingBox], loc)){
-                    [self saveCurrentLevel];
-                    [[CCDirector sharedDirector] replaceScene:[GameScene scene] withTransition:[CCTransition transitionCrossFadeWithDuration:0.5f]];
-                }
-            }else{
-                CGPoint houseLoc = [house convertToNodeSpace: loc];
-                
-                if(iconsUp){
-                    if(CGRectContainsPoint([deleteIcon boundingBox], loc)){
-                        if(currentSelectedRoom){
-                            [house removeChild:[currentSelectedRoom objectForKey:@"sprite"]];
-                            [currentRooms removeObject:currentSelectedRoom];
-                            
-                            [self updateStructureNode];
-                            
-                            [self hideIcons];
-                        }
-                    }else if(CGRectContainsPoint([moveIcon boundingBox], loc)){
-                        NSLog(@"Move icon");
-                    }else{
+            CGPoint houseLoc = [house convertToNodeSpace: loc];
+            
+            if(iconsUp){
+                if(CGRectContainsPoint([deleteIcon boundingBox], loc)){
+                    if(currentSelectedRoom){
+                        [house removeChild:[currentSelectedRoom objectForKey:@"sprite"]];
+                        [currentRooms removeObject:currentSelectedRoom];
+                        
+                        [self updateStructureNode];
+                        
                         [self hideIcons];
                     }
+                }else if(CGRectContainsPoint([moveIcon boundingBox], loc)){
+                    NSLog(@"Move icon");
                 }else{
-                    CCSprite *roomSpriteTap = nil;
+                    [self hideIcons];
+                }
+            }else{
+                CCSprite *roomSpriteTap = nil;
 
-                    for(CCNode *child in [house children]){
-                        if([child isKindOfClass: [CCSprite class]]){
-                            if(CGRectContainsPoint([child boundingBox], houseLoc))
-                                roomSpriteTap = (CCSprite *)child;
-                        }
+                for(CCNode *child in [house children]){
+                    if([child isKindOfClass: [CCSprite class]]){
+                        if(CGRectContainsPoint([child boundingBox], houseLoc))
+                            roomSpriteTap = (CCSprite *)child;
                     }
-                    
-                    if(roomSpriteTap != nil){
-                        for(NSDictionary *room in currentRooms){
-                            if([room objectForKey:@"sprite"] == roomSpriteTap){
-                                CCActionSequence *pulse = [CCActionSequence actionWithArray: @[[CCActionTintTo actionWithDuration:0.25f color:[CCColor colorWithCcColor3b:ccc3(255, 155, 155)]], [CCActionTintTo actionWithDuration:0.25f color:[CCColor whiteColor]]]];
-                                [roomSpriteTap runAction: pulse];
-                                
-                                currentSelectedRoom = room;
-                                [self showIconsFrom: loc];
-                            }
+                }
+                
+                if(roomSpriteTap != nil){
+                    for(NSDictionary *room in currentRooms){
+                        if([room objectForKey:@"sprite"] == roomSpriteTap){
+                            CCActionSequence *pulse = [CCActionSequence actionWithArray: @[[CCActionTintTo actionWithDuration:0.25f color:[CCColor colorWithCcColor3b:ccc3(255, 155, 155)]], [CCActionTintTo actionWithDuration:0.25f color:[CCColor whiteColor]]]];
+                            [roomSpriteTap runAction: pulse];
+                            
+                            currentSelectedRoom = room;
+                            [self showIconsFrom: loc];
                         }
                     }
                 }
             }
+            
         }
         
         panOffset = [house position];
@@ -433,53 +495,6 @@ int wrapAndAddAngle(int angle, int add){
             dropping = NO;
         }
     }
-}
-
-- (void)updateStructureNode{
-    [structureNode clearAllTiles];
-    
-    int roomID = 0;
-    for(NSMutableDictionary *room in currentRooms){
-        int roomX = [[room objectForKey: @"x"] intValue];
-        int roomY = [[room objectForKey: @"y"] intValue];
-        int roomW = [[room objectForKey: @"width"] intValue];
-        int roomH = [[room objectForKey: @"height"] intValue];
-        int roomRot = [[room objectForKey: @"rot"] intValue];
-        
-        if(roomRot == 90 || roomRot == -90 || roomRot == 270){
-            int temp = roomW;
-            roomW = roomH;
-            roomH = temp;
-        }
-        
-        BOOL subs = ([room objectForKey:@"xsubs"] != nil);
-        
-        if(subs){
-            int xsubs = [[room objectForKey: @"xsubs"] intValue];
-            int ysubs = [[room objectForKey: @"ysubs"] intValue];
-            
-            if(roomRot == 90 || roomRot == -90 || roomRot == 270){
-                int temp = xsubs;
-                xsubs = ysubs;
-                ysubs = temp;
-            }
-            
-            for(int x = 0; x < xsubs; x++){
-                for(int y = 0; y < ysubs; y++){
-                    [structureNode createWallRectangle:roomX + x * roomW y:roomY + y * roomH width:roomW height:roomH roomID:roomID roomName:[room objectForKey:@"name"]];
-                }
-            }
-        }else{
-            [structureNode createWallRectangle:roomX y:roomY width:roomW height:roomH roomID:roomID roomName:[room objectForKey:@"name"]];
-        }
-        
-        roomID++;
-    }
-
-    [structureNode removeDoorways: currentRooms];
-    [structureNode removeDoubleWalls: currentRooms];
-    [structureNode removeSingles];
-    [structureNode correctWallOrientations];
 }
 
 - (void)showIconsFrom:(CGPoint)pt{

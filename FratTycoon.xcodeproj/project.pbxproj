@@ -247,6 +247,12 @@
 		77A930521960D9EC00C65DB1 /* TextureMap@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 77A930371960D9EC00C65DB1 /* TextureMap@2x.png */; };
 		77A930531960D9EC00C65DB1 /* WallPieces-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 77A930381960D9EC00C65DB1 /* WallPieces-hd.png */; };
 		77A930551960DB3300C65DB1 /* Button-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 77A930541960DB3300C65DB1 /* Button-hd.png */; };
+		77B167381978D2800019D362 /* FTPersonState.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B167371978D2800019D362 /* FTPersonState.m */; };
+		77B1673B1978D2D10019D362 /* FTWalkingState.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B1673A1978D2D10019D362 /* FTWalkingState.m */; };
+		77B1673E1978D8240019D362 /* FTStandingState.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B1673D1978D8240019D362 /* FTStandingState.m */; };
+		77B167441978E3630019D362 /* FTPhysicsDebugNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B167431978E3630019D362 /* FTPhysicsDebugNode.m */; };
+		77B16747197984620019D362 /* FTUsingSequentialState.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B16746197984620019D362 /* FTUsingSequentialState.m */; };
+		77B1674A197EE8450019D362 /* FTGettingDrinkState.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B16749197EE8450019D362 /* FTGettingDrinkState.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -740,6 +746,18 @@
 		77A930371960D9EC00C65DB1 /* TextureMap@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TextureMap@2x.png"; sourceTree = "<group>"; };
 		77A930381960D9EC00C65DB1 /* WallPieces-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "WallPieces-hd.png"; sourceTree = "<group>"; };
 		77A930541960DB3300C65DB1 /* Button-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Button-hd.png"; sourceTree = "<group>"; };
+		77B167361978D2800019D362 /* FTPersonState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPersonState.h; sourceTree = "<group>"; };
+		77B167371978D2800019D362 /* FTPersonState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTPersonState.m; sourceTree = "<group>"; };
+		77B167391978D2D10019D362 /* FTWalkingState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTWalkingState.h; sourceTree = "<group>"; };
+		77B1673A1978D2D10019D362 /* FTWalkingState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTWalkingState.m; sourceTree = "<group>"; };
+		77B1673C1978D8240019D362 /* FTStandingState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTStandingState.h; sourceTree = "<group>"; };
+		77B1673D1978D8240019D362 /* FTStandingState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTStandingState.m; sourceTree = "<group>"; };
+		77B167421978E3630019D362 /* FTPhysicsDebugNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPhysicsDebugNode.h; sourceTree = "<group>"; };
+		77B167431978E3630019D362 /* FTPhysicsDebugNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTPhysicsDebugNode.m; sourceTree = "<group>"; };
+		77B16745197984620019D362 /* FTUsingSequentialState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTUsingSequentialState.h; sourceTree = "<group>"; };
+		77B16746197984620019D362 /* FTUsingSequentialState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTUsingSequentialState.m; sourceTree = "<group>"; };
+		77B16748197EE8450019D362 /* FTGettingDrinkState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTGettingDrinkState.h; sourceTree = "<group>"; };
+		77B16749197EE8450019D362 /* FTGettingDrinkState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTGettingDrinkState.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -812,6 +830,8 @@
 				777AA9081959311100C45970 /* FTModel.m */,
 				777AA90B1959311100C45970 /* FTPersonPopup.h */,
 				777AA90C1959311100C45970 /* FTPersonPopup.m */,
+				77B167421978E3630019D362 /* FTPhysicsDebugNode.h */,
+				77B167431978E3630019D362 /* FTPhysicsDebugNode.m */,
 				777AA90D1959311100C45970 /* FTQuantityBar.h */,
 				777AA90E1959311100C45970 /* FTQuantityBar.m */,
 				777AA8F1195930B300C45970 /* FTEditorBlueprint.h */,
@@ -828,6 +848,16 @@
 				777AA9281959316F00C45970 /* FTStructureNode.m */,
 				777AA92A195933A100C45970 /* FTDecorationNode.h */,
 				777AA92B195933A100C45970 /* FTDecorationNode.m */,
+				77B167361978D2800019D362 /* FTPersonState.h */,
+				77B167371978D2800019D362 /* FTPersonState.m */,
+				77B167391978D2D10019D362 /* FTWalkingState.h */,
+				77B1673A1978D2D10019D362 /* FTWalkingState.m */,
+				77B1673C1978D8240019D362 /* FTStandingState.h */,
+				77B1673D1978D8240019D362 /* FTStandingState.m */,
+				77B16745197984620019D362 /* FTUsingSequentialState.h */,
+				77B16746197984620019D362 /* FTUsingSequentialState.m */,
+				77B16748197EE8450019D362 /* FTGettingDrinkState.h */,
+				77B16749197EE8450019D362 /* FTGettingDrinkState.m */,
 				777AA6791959300000C45970 /* Libraries */,
 				777AA8DE1959300200C45970 /* Classes */,
 				777AA8DA1959300200C45970 /* Supporting Files */,
@@ -1844,6 +1874,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				777AA6E61959300000C45970 /* CCParticleBatchNode.m in Sources */,
+				77B16747197984620019D362 /* FTUsingSequentialState.m in Sources */,
 				777AA9251959313E00C45970 /* GameScene.m in Sources */,
 				777AA85E1959300200C45970 /* CCBReader.m in Sources */,
 				777AA80E1959300100C45970 /* CCButton.m in Sources */,
@@ -1922,7 +1953,9 @@
 				777AA7C91959300100C45970 /* OALSimpleAudio.m in Sources */,
 				777AA9141959311100C45970 /* FTModel.m in Sources */,
 				777AA6BB1959300000C45970 /* CCGLProgram.m in Sources */,
+				77B1673E1978D8240019D362 /* FTStandingState.m in Sources */,
 				777AA8DD1959300200C45970 /* main.m in Sources */,
+				77B167441978E3630019D362 /* FTPhysicsDebugNode.m in Sources */,
 				777AA7F01959300100C45970 /* OALAudioSession.m in Sources */,
 				777AA8671959300200C45970 /* CCBLocalizationManager.m in Sources */,
 				777AA9121959311100C45970 /* FTMinigameBPCup.m in Sources */,
@@ -1975,16 +2008,19 @@
 				777AA8151959300100C45970 /* CCControlTextureFactory.m in Sources */,
 				777AA69A1959300000C45970 /* CCAnimationCache.m in Sources */,
 				777AA81E1959300100C45970 /* CCTableView.m in Sources */,
+				77B1674A197EE8450019D362 /* FTGettingDrinkState.m in Sources */,
 				777AA8E11959300200C45970 /* AppDelegate.m in Sources */,
 				777AA6B11959300000C45970 /* CCDrawingPrimitives.m in Sources */,
 				777AA7A21959300100C45970 /* TGAlib.m in Sources */,
 				777AA76E1959300100C45970 /* UITouch+CC.m in Sources */,
+				77B167381978D2800019D362 /* FTPersonState.m in Sources */,
 				777AA84C1959300100C45970 /* utility.c in Sources */,
 				777AA9221959313E00C45970 /* CampusScene.m in Sources */,
 				777AA7AB1959300100C45970 /* ZipUtils.m in Sources */,
 				777AA9111959311100C45970 /* FTLevelStack.m in Sources */,
 				777AA7BC1959300100C45970 /* OALUtilityActions.m in Sources */,
 				777AA7671959300100C45970 /* CCES2Renderer.m in Sources */,
+				77B1673B1978D2D10019D362 /* FTWalkingState.m in Sources */,
 				777AA8371959300100C45970 /* aabb.c in Sources */,
 				777AA8611959300200C45970 /* CCBsequence.m in Sources */,
 				777AA6C21959300000C45970 /* CCLabelAtlas.m in Sources */,
