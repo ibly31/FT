@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 ibly31apps. All rights reserved.
 //
 
-#import "FTPersonState.h"
+#import "FTUsingState.h"
 
 typedef enum{
     FTUsingStateStageWalking = 0,
@@ -14,18 +14,15 @@ typedef enum{
     FTUsingStateStageLeaving
 }FTUsingStateStage;
 
-@interface FTUsingSequentialState : FTPersonState{
+@interface FTUsingSequentialState : FTUsingState{
     NSMutableArray *points;
     int currentPathIndex;
-    
-    NSTimeInterval useStart;
-    
+        
     FTUsingStateStage currentStage;
     
-    NSDictionary *decDict;
-    NSDictionary *useLinkDict;
+    NSMutableDictionary *useLinkDict;
 }
 
-- (id)initWithDecorationDict:(NSDictionary *)dd;
+- (id)initWithDecorationDict:(NSMutableDictionary *)dd;
 
 @end

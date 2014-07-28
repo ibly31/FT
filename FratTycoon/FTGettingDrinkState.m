@@ -9,10 +9,11 @@
 #import "FTGettingDrinkState.h"
 #import "FTPeopleNode.h"
 #import "FTStandingState.h"
+#import "FTDrinkSprite.h"
 
 @implementation FTGettingDrinkState
 
-- (id)initWithDecorationDict:(NSDictionary *)dd{
+- (id)initWithDecorationDict:(NSMutableDictionary *)dd{
     self = [super init];
     if(self){
         self.stateName = @"Getting Drink";
@@ -23,7 +24,7 @@
     return self;
 }
 
-- (void)update{
+- (void)update:(CCTime)delta{
     ChipmunkBody *personBody = [(ChipmunkShape *)[self.personData objectForKey: @"shape"] body];
     ChipmunkBody *staticTargetBody = (ChipmunkBody *)[self.personData objectForKey:@"staticTargetBody"];
     
@@ -53,9 +54,20 @@
         }
     }else{
         if([[decDict objectForKey:@"use"] objectForKey:@"usetime"] != nil){
-            if(CFAbsoluteTimeGetCurrent() - useStart > [[[decDict objectForKey:@"use"] objectForKey:@"usetime"] doubleValue]){
-                FTStandingState *standingState = [[FTStandingState alloc] initWithTargetLocation: currentDestination];
-                [self.peopleNode personChangeState:self.personIndex newState:standingState];
+            if(CFAbsoluteTimeGetCurrent() - useStart > [[[decDict objectForKey:@"use"] objectForKey:@"usetime"] doubleValue]){                
+                NSDictionary *drinks = [[decDict objectForKey:@"use"] objectForKey:@"drinks"];
+                
+                FTDrinkSpriteType type;
+                if([[drinks objectForKey:@"drinktype"] isEqualToString:@"can"])
+                    type = FTDrinkSpriteCan;
+                else if([[drinks objectForKey:@"drinktype"] isEqualToString:@"cup"])
+                    type = FTDrinkSpriteCup;
+                else if([[drinks objectForKey:@"drinktype"] isEqualToString:@"bottle"])
+                    type = FTDrinkSpriteBottle;
+                
+                [self.peopleNode personTakeDrink:self.personIndex drinkType:type from:ccp(8,25) to:ccp(0,8)];
+                
+                [self finishUse: YES];
             }
         }
     }

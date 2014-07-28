@@ -23,7 +23,6 @@
         
         for(NSString *pointString in ptArray){
             CGPoint pt = CGPointFromString(pointString);
-            NSLog(@" %@", pointString);
             
             NSValue *pointValue = [NSValue valueWithCGPoint: pt];
             [points addObject: pointValue];
@@ -43,7 +42,7 @@
     [pivotJoint setMaxForce: WALK_FORCE];
 }
 
-- (void)update{
+- (void)update:(CCTime)delta{
     ChipmunkBody *personBody = [(ChipmunkShape *)[self.personData objectForKey: @"shape"] body];
     ChipmunkBody *staticTargetBody = (ChipmunkBody *)[self.personData objectForKey:@"staticTargetBody"];
 
@@ -57,11 +56,9 @@
     self.headLookAtPoint = bodyLookAtPoint;
     //self.headLookAtPoint = ccpAdd(self.bodyLookAtPoint, ccp(CCRANDOM_MINUS1_1() * 5, CCRANDOM_MINUS1_1() * 5));
     
-    NSLog(@"Current path index: %i, dest: %@", currentPathIndex, NSStringFromCGPoint(currentDestination));
-    
     if(ccpLength(ccpSub([personBody position], currentDestination)) < 11.0f){
         currentPathIndex--;
-        if(currentPathIndex == 0){
+        if(currentPathIndex <= 0){
             if(self.nextState != nil){
                 [self.peopleNode personChangeState:self.personIndex newState:self.nextState];
             }else{

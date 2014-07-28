@@ -253,6 +253,9 @@
 		77B167441978E3630019D362 /* FTPhysicsDebugNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B167431978E3630019D362 /* FTPhysicsDebugNode.m */; };
 		77B16747197984620019D362 /* FTUsingSequentialState.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B16746197984620019D362 /* FTUsingSequentialState.m */; };
 		77B1674A197EE8450019D362 /* FTGettingDrinkState.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B16749197EE8450019D362 /* FTGettingDrinkState.m */; };
+		77B1674D1980C8F50019D362 /* FTDrinkSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B1674C1980C8F50019D362 /* FTDrinkSprite.m */; };
+		77B167501980D1EC0019D362 /* FTTrashNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B1674F1980D1EC0019D362 /* FTTrashNode.m */; };
+		77B167591984BE760019D362 /* FTUsingState.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B167581984BE750019D362 /* FTUsingState.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -758,6 +761,12 @@
 		77B16746197984620019D362 /* FTUsingSequentialState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTUsingSequentialState.m; sourceTree = "<group>"; };
 		77B16748197EE8450019D362 /* FTGettingDrinkState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTGettingDrinkState.h; sourceTree = "<group>"; };
 		77B16749197EE8450019D362 /* FTGettingDrinkState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTGettingDrinkState.m; sourceTree = "<group>"; };
+		77B1674B1980C8F50019D362 /* FTDrinkSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTDrinkSprite.h; sourceTree = "<group>"; };
+		77B1674C1980C8F50019D362 /* FTDrinkSprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTDrinkSprite.m; sourceTree = "<group>"; };
+		77B1674E1980D1EC0019D362 /* FTTrashNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTTrashNode.h; sourceTree = "<group>"; };
+		77B1674F1980D1EC0019D362 /* FTTrashNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTTrashNode.m; sourceTree = "<group>"; };
+		77B167571984BE750019D362 /* FTUsingState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTUsingState.h; sourceTree = "<group>"; };
+		77B167581984BE750019D362 /* FTUsingState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTUsingState.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -826,6 +835,8 @@
 				777AA9041959311100C45970 /* FTMinigameBPCup.m */,
 				777AA9051959311100C45970 /* FTMinigameScene.h */,
 				777AA9061959311100C45970 /* FTMinigameScene.m */,
+				77B1674B1980C8F50019D362 /* FTDrinkSprite.h */,
+				77B1674C1980C8F50019D362 /* FTDrinkSprite.m */,
 				777AA9071959311100C45970 /* FTModel.h */,
 				777AA9081959311100C45970 /* FTModel.m */,
 				777AA90B1959311100C45970 /* FTPersonPopup.h */,
@@ -844,6 +855,8 @@
 				777AA90A1959311100C45970 /* FTPeopleNode.m */,
 				777AA8FF1959311100C45970 /* FTHouseNode.h */,
 				777AA9001959311100C45970 /* FTHouseNode.m */,
+				77B1674E1980D1EC0019D362 /* FTTrashNode.h */,
+				77B1674F1980D1EC0019D362 /* FTTrashNode.m */,
 				777AA9271959316F00C45970 /* FTStructureNode.h */,
 				777AA9281959316F00C45970 /* FTStructureNode.m */,
 				777AA92A195933A100C45970 /* FTDecorationNode.h */,
@@ -854,6 +867,8 @@
 				77B1673A1978D2D10019D362 /* FTWalkingState.m */,
 				77B1673C1978D8240019D362 /* FTStandingState.h */,
 				77B1673D1978D8240019D362 /* FTStandingState.m */,
+				77B167571984BE750019D362 /* FTUsingState.h */,
+				77B167581984BE750019D362 /* FTUsingState.m */,
 				77B16745197984620019D362 /* FTUsingSequentialState.h */,
 				77B16746197984620019D362 /* FTUsingSequentialState.m */,
 				77B16748197EE8450019D362 /* FTGettingDrinkState.h */,
@@ -1925,6 +1940,7 @@
 				777AA6931959300000C45970 /* CCActionTween.m in Sources */,
 				777AA8011959300100C45970 /* NSMutableDictionary+WeakReferences.m in Sources */,
 				777AA6DE1959300000C45970 /* CCNode+Debug.m in Sources */,
+				77B1674D1980C8F50019D362 /* FTDrinkSprite.m in Sources */,
 				777AA6971959300000C45970 /* CCAnimation.m in Sources */,
 				777AA8401959300100C45970 /* mat3.c in Sources */,
 				777AA74C1959300100C45970 /* CCTiledMap.m in Sources */,
@@ -1939,6 +1955,7 @@
 				777AA72E1959300100C45970 /* CCSprite.m in Sources */,
 				777AA68A1959300000C45970 /* CCActionInterval.m in Sources */,
 				777AA6F91959300000C45970 /* CCPhysicsJoint.m in Sources */,
+				77B167591984BE760019D362 /* FTUsingState.m in Sources */,
 				777AA6D71959300000C45970 /* CCMotionStreak.m in Sources */,
 				777AA6871959300000C45970 /* CCActionInstant.m in Sources */,
 				777AA7811959300100C45970 /* base64.c in Sources */,
@@ -1984,6 +2001,7 @@
 				777AA8041959300100C45970 /* OALAudioFile.m in Sources */,
 				777AA72A1959300100C45970 /* ccShaders.m in Sources */,
 				777AA83E1959300100C45970 /* matrix.c in Sources */,
+				77B167501980D1EC0019D362 /* FTTrashNode.m in Sources */,
 				777AA7501959300100C45970 /* CCTiledMapLayer.m in Sources */,
 				777AA8441959300100C45970 /* neon_matrix_impl.c in Sources */,
 				777AA6C91959300000C45970 /* CCLabelTTF.m in Sources */,

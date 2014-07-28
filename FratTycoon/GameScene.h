@@ -11,7 +11,7 @@
 #import "FTPersonPopup.h"
 #import "FTLevelStack.h"
 
-@interface GameScene : CCNode <FTLevelStackDelegate>{
+@interface GameScene : CCNode <FTLevelStackDelegate, UIAlertViewDelegate>{
     FTHouseNode *houseNode;
     
     FTPersonPopup *personPopup;
@@ -24,8 +24,10 @@
     
     int selectedPerson;
     
+    NSString *viewMode;
+    
     CCButton *backButton;
-    CCButton *debugButton;
+    CCButton *viewButton;
 }
 
 + (CCScene *) scene;

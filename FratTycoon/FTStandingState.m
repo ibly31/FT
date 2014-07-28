@@ -32,7 +32,7 @@
     [pivotJoint setMaxForce: STAND_FORCE];
 }
 
-- (void)update{
+- (void)update:(CCTime)delta{
     ChipmunkBody *personBody = [(ChipmunkShape *)[self.personData objectForKey: @"shape"] body];
 
     if(CFAbsoluteTimeGetCurrent() - lastLookChangeTime > currentLookChangeDelay){

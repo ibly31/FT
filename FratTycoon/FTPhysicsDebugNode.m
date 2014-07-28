@@ -29,16 +29,18 @@
 }
 
 - (void)update:(CCTime)delta{
-    [self clear];
-    for(ChipmunkShape *shape in [space shapes]){
-        if([shape isKindOfClass: [ChipmunkCircleShape class]]){
-            cpBB boundingBox = [shape bb];
-            float radius = (boundingBox.r - boundingBox.l) / 2.0f;
-            [self drawCircle:ccp(boundingBox.l + radius, boundingBox.b + radius) radius:radius color:[CCColor greenColor]];
-        }else{
-            cpBB boundingBox = [shape bb];
-            CGRect boundingBoxRect = CGRectMake(boundingBox.l, boundingBox.b, boundingBox.r - boundingBox.l, boundingBox.t - boundingBox.b);
-            [self drawRect:boundingBoxRect color:[CCColor greenColor]];
+    if(self.visible){
+        [self clear];
+        for(ChipmunkShape *shape in [space shapes]){
+            if([shape isKindOfClass: [ChipmunkCircleShape class]]){
+                cpBB boundingBox = [shape bb];
+                float radius = (boundingBox.r - boundingBox.l) / 2.0f;
+                [self drawCircle:ccp(boundingBox.l + radius, boundingBox.b + radius) radius:radius color:[CCColor greenColor]];
+            }else{
+                cpBB boundingBox = [shape bb];
+                CGRect boundingBoxRect = CGRectMake(boundingBox.l, boundingBox.b, boundingBox.r - boundingBox.l, boundingBox.t - boundingBox.b);
+                [self drawRect:boundingBoxRect color:[CCColor greenColor]];
+            }
         }
     }
 }

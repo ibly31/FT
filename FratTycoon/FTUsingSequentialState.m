@@ -14,7 +14,7 @@
 
 @implementation FTUsingSequentialState
 
-- (id)initWithDecorationDict:(NSDictionary *)dd{
+- (id)initWithDecorationDict:(NSMutableDictionary *)dd{
     self = [super init];
     if(self){
         self.stateName = @"Using-Sequential";
@@ -32,14 +32,23 @@
 - (void)prepare{
     if([decDict objectForKey: @"use"] != nil){
         if([[[decDict objectForKey: @"use"] objectForKey: @"usestyle"] isEqualToString: @"sequential"] || [[[decDict objectForKey: @"use"] objectForKey: @"usestyle"] isEqualToString: @"sequential-link"]){
-            NSArray *usePositions = [[decDict objectForKey: @"use"] objectForKey: @"usepositions"];
+            NSArray *usePositionSets = [[decDict objectForKey: @"use"] objectForKey: @"usepositionsets"];
+            NSArray *usePositions = nil;
+            
+            if(usePositionSets != nil){
+                int numusers = [[decDict objectForKey: @"numusers"] intValue];
+                usePositions = [[[decDict objectForKey: @"use"] objectForKey: @"usepositionsets"] objectAtIndex: numusers - 1];
+            }else{
+                usePositions = [[decDict objectForKey: @"use"] objectForKey: @"usepositions"];
+            }
+            
             if(usePositions){
                 int rot = [(CCSprite *)[decDict objectForKey: @"sprite"] rotation];
                 int scaleX = [(CCSprite *)[decDict objectForKey: @"sprite"] scaleX];
                 int scaleY = [(CCSprite *)[decDict objectForKey: @"sprite"] scaleY];
                 
                 if([[[decDict objectForKey: @"use"] objectForKey: @"usestyle"] isEqualToString: @"sequential-link"]){
-                    NSDictionary *nextDecDict = [[[self.peopleNode houseNode] decorationNode] decorationFromSequentialLink: decDict];
+                    NSMutableDictionary *nextDecDict = [[self.peopleNode decorationNode] decorationFromSequentialLink: decDict];
                     useLinkDict = nextDecDict;
                 }
                 
@@ -68,7 +77,20 @@
     [pivotJoint setMaxForce: WALK_FORCE];
 }
 
-- (void)update{
+- (void)finishUse:(BOOL)assign{
+    if([[decDict objectForKey: @"use"] objectForKey: @"toilet"] != nil){
+        NSMutableDictionary *adjacentSink = [[self.peopleNode decorationNode] decorationFromName:@"twosink1" adjacentTo:decDict];
+        if(adjacentSink != nil){
+            NSLog(@"sending off");
+            [self.peopleNode personUseDecoration:self.personIndex decorationDict:adjacentSink walkToStart:YES];
+        }
+        [super finishUse: NO];
+    }else{
+        [super finishUse: assign];
+    }
+}
+
+- (void)update:(CCTime)delta{
     ChipmunkBody *personBody = [(ChipmunkShape *)[self.personData objectForKey: @"shape"] body];
     ChipmunkBody *staticTargetBody = (ChipmunkBody *)[self.personData objectForKey:@"staticTargetBody"];
     
@@ -79,6 +101,9 @@
         self.bodyLookAtPoint = ccpAdd([personBody position], [personBody velocity]);
         self.headLookAtPoint = bodyLookAtPoint;
         
+        if(currentPathIndex == 0)
+            currentPathIndex = 1;
+        
         CGPoint currentDestination = [[points objectAtIndex: currentPathIndex - 1] CGPointValue];
         [staticTargetBody setPosition: currentDestination];
         
@@ -88,6 +113,7 @@
                 if(useLinkDict != nil){
                     FTUsingSequentialState *usingState = [[FTUsingSequentialState alloc] initWithDecorationDict: useLinkDict];
                     [self.peopleNode personChangeState:self.personIndex newState:usingState];
+                    [self finishUse: NO];
                     return;
                 }
                 
@@ -101,6 +127,7 @@
                 
                 CGPoint pathZero = [[points objectAtIndex: 0] CGPointValue];
                 CGPoint lookAt = ccp(10 * cosf(CC_DEGREES_TO_RADIANS(90 - useRotation)), 10 * sinf(CC_DEGREES_TO_RADIANS(90 - useRotation)));
+                
                 self.bodyLookAtPoint = ccpAdd(pathZero, lookAt);
                 self.headLookAtPoint = bodyLookAtPoint;
             }else{
@@ -110,11 +137,28 @@
         }
     }else if(currentStage == FTUsingStateStageUsing){
         if([[decDict objectForKey:@"use"] objectForKey:@"usetime"] != nil){
-            if(CFAbsoluteTimeGetCurrent() - useStart > [[[decDict objectForKey:@"use"] objectForKey:@"usetime"] doubleValue]){
+            double useTime = [[[decDict objectForKey:@"use"] objectForKey:@"usetime"] doubleValue];
+            if([[decDict objectForKey: @"use"] objectForKey: @"toilet"] != nil){
+                float bladder = [[self.personData objectForKey: @"bladder"] floatValue];
+                bladder = max(bladder - delta / useTime, 0);
+                
+                [self.personData setObject:@(bladder) forKey:@"bladder"];
+            }
+            
+            if(CFAbsoluteTimeGetCurrent() - useStart > useTime){
                 currentStage = FTUsingStateStageLeaving;
                 NSString *useStyle = [[decDict objectForKey: @"use"] objectForKey: @"usestyle"];
                 if([useStyle isEqualToString: @"sequential"] || [useStyle isEqualToString: @"sequential-link"]){
-                    NSArray *usePositions = [[decDict objectForKey: @"use"] objectForKey: @"usepositions"];
+                    NSArray *usePositionSets = [[decDict objectForKey: @"use"] objectForKey: @"usepositionsets"];
+                    NSArray *usePositions = nil;
+                    
+                    if(usePositionSets != nil){
+                        int numusers = [[decDict objectForKey: @"numusers"] intValue];
+                        usePositions = [usePositionSets objectAtIndex: numusers - 1];
+                    }else{
+                        usePositions = [[decDict objectForKey: @"use"] objectForKey: @"usepositions"];
+                    }
+                    
                     if(usePositions){
                         int rot = [(CCSprite *)[decDict objectForKey: @"sprite"] rotation];
                         int scaleX = [(CCSprite *)[decDict objectForKey: @"sprite"] scaleX];
@@ -142,14 +186,16 @@
         self.bodyLookAtPoint = ccpAdd([personBody position], [personBody velocity]);
         self.headLookAtPoint = bodyLookAtPoint;
         
+        if(currentPathIndex == 0)
+            currentPathIndex = 1;
+        
         CGPoint currentDestination = [[points objectAtIndex: currentPathIndex - 1] CGPointValue];
         [staticTargetBody setPosition: currentDestination];
         
         if(ccpLength(ccpSub([personBody position], currentDestination)) < 11.0f){
             currentPathIndex--;
             if(currentPathIndex == 0){
-                FTStandingState *standingState = [[FTStandingState alloc] initWithTargetLocation: currentDestination];
-                [self.peopleNode personChangeState:self.personIndex newState:standingState];
+                [self finishUse: YES];
             }else{
                 CGPoint newDestination = [[points objectAtIndex: currentPathIndex - 1] CGPointValue];
                 [staticTargetBody setPosition: newDestination];

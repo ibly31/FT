@@ -10,6 +10,7 @@
 #import "FTStructureNode.h"
 #import "FTDecorationNode.h"
 #import "FTPeopleNode.h"
+#import "FTTrashNode.h"
 #import "FTConstants.h"
 #import "FTLevelStack.h"
 
@@ -21,6 +22,7 @@
     FTPeopleNode *peopleNode;
     FTDecorationNode *decorationNode;
     FTStructureNode *structureNode;
+    FTTrashNode *trashNode;
     FTStructureNode *floorMapNode;
     
     NSSet *startingClosedSet;
@@ -41,7 +43,10 @@
 @property (nonatomic, retain) FTPeopleNode *peopleNode;
 @property (nonatomic, retain) FTDecorationNode *decorationNode;
 @property (nonatomic, retain) FTStructureNode *structureNode;
+@property (nonatomic, retain) FTTrashNode *trashNode;
 @property (nonatomic, retain) FTStructureNode *floorMapNode;
+
+@property (nonatomic, retain) NSMutableArray *currentRooms;
 
 @property (nonatomic, retain) GameScene *gameScene;
 
@@ -51,7 +56,7 @@
 - (void)resetHouseData;
 - (void)readHouseData:(NSDictionary *)houseData;
 - (void)addRoom:(NSString *)roomName x:(int)xx y:(int)yy rot:(int)rot;
-- (NSDictionary *)decorationAtTapLocation:(CGPoint)tap;
+- (NSMutableDictionary *)decorationAtTapLocation:(CGPoint)tap;
 - (NSArray *)findPathFrom:(CGPoint)start end:(CGPoint)end;
 - (BOOL)pointCanSpawnPerson:(CGPoint)pt;
 

@@ -14,7 +14,9 @@
 @synthesize peopleNode;
 @synthesize decorationNode;
 @synthesize structureNode;
+@synthesize trashNode;
 @synthesize floorMapNode;
+@synthesize currentRooms;
 @synthesize gameScene;
 @synthesize width;
 @synthesize height;
@@ -35,14 +37,18 @@
         self.decorationNode = [[FTDecorationNode alloc] init];
         
         currentLevel = 0;
-        currentRooms = nil;
+        self.currentRooms = nil;
         [self readHouseData: [[FTModel sharedModel] currentHouseData]];
         
         self.peopleNode = [[FTPeopleNode alloc] init];
         [peopleNode setHouseNode: self];
+        [peopleNode setDecorationNode: decorationNode];
         [peopleNode createPhysicsBounds];
         
+        self.trashNode = [[FTTrashNode alloc] initWithChipmunkSpace: [peopleNode space]];
+        
         [self addChild: floorMapNode];
+        [self addChild: trashNode];
         [self addChild: structureNode];
         [self addChild: decorationNode];
         [self addChild: peopleNode];
@@ -58,7 +64,7 @@
 }
 
 - (void)readHouseData:(NSDictionary *)houseData{
-    currentRooms = [[NSMutableArray alloc] init];
+    self.currentRooms = [[NSMutableArray alloc] init];
     
     if([houseData objectForKey:@"levels"] != nil){
         NSDictionary *level = [[houseData objectForKey:@"levels"] objectAtIndex: currentLevel];
@@ -173,9 +179,10 @@
 
 - (void)addRoom:(NSString *)roomName x:(int)xx y:(int)yy rot:(int)rot{
     NSMutableDictionary *roomDef = [[[FTModel sharedModel] roomWithName: roomName] mutableCopy];
-    [roomDef setObject:[NSNumber numberWithInt:xx] forKey:@"x"];
-    [roomDef setObject:[NSNumber numberWithInt:yy] forKey:@"y"];
-    [roomDef setObject:[NSNumber numberWithInt:rot] forKey:@"rot"];
+    [roomDef setObject:@(xx) forKey:@"x"];
+    [roomDef setObject:@(yy) forKey:@"y"];
+    [roomDef setObject:@(rot) forKey:@"rot"];
+    [roomDef setObject:@(0) forKey:@"numusers"];
     [currentRooms addObject: roomDef];
     
     if(roomDef != nil){
@@ -244,7 +251,6 @@
     
     NSString *startString = NSStringFromCGPoint(ccp(startTileX, startTileY));
     NSString *goalString = NSStringFromCGPoint(ccp(endTileX, endTileY));
-    NSLog(@"Tracing route from (%i, %i) to (%i, %i)", startTileX, startTileY, endTileX, endTileY);
     
     CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
     
@@ -298,7 +304,7 @@
                     int currentX = (int)CGPointFromString(current).x;
                     int currentY = (int)CGPointFromString(current).y;
                     
-                    [structureNode setTileType:44 x:currentX y:currentY];
+                    //[structureNode setTileType:44 x:currentX y:currentY];
                     
                     NSMutableSet *neighbors = [[NSMutableSet alloc] init];
                     for(int x = currentX - 1; x < currentX + 2; x++){
@@ -343,7 +349,7 @@
                 int pathX = CGPointFromString(pathback).x;
                 int pathY = CGPointFromString(pathback).y;
                 [pointArray addObject: NSStringFromCGPoint(ccp(pathX * 12 + 6, (HOUSELOT_HEIGHT * 2 - pathY) * 12 - 6))];
-                [structureNode setTileType:45 x:pathX y:pathY];
+                //[structureNode setTileType:45 x:pathX y:pathY];
                 
                 pathback = [cameFrom objectForKey: pathback];
             }
@@ -377,7 +383,7 @@
                 }
             }
             */
-            NSLog(@"Pathfinding runtime: %f ms, itrcount: %i", (CFAbsoluteTimeGetCurrent() - startTime) * 1000, itrCount);
+            //NSLog(@"Pathfinding runtime: %f ms, itrcount: %i", (CFAbsoluteTimeGetCurrent() - startTime) * 1000, itrCount);
             
             return [pointArray copy];
         }else{
@@ -482,10 +488,10 @@
     return NO;
 }
 
-- (NSDictionary *)decorationAtTapLocation:(CGPoint)tap{
+- (NSMutableDictionary *)decorationAtTapLocation:(CGPoint)tap{
     // Search backwards to find decorations on top first
     for(int i = (int)[[decorationNode decorations] count] - 1; i >= 0; i--){
-        NSDictionary *decDict = [[decorationNode decorations] objectAtIndex: i];
+        NSMutableDictionary *decDict = [[decorationNode decorations] objectAtIndex: i];
         if(CGRectContainsPoint([(CCSprite *)[decDict objectForKey:@"sprite"] boundingBox], tap)){
             return decDict;
         }

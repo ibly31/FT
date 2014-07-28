@@ -22,6 +22,8 @@
     FTQuantityBar *intelligenceQuantity;
     FTQuantityBar *happinessQuantity;
     FTQuantityBar *sicknessQuantity;
+    FTQuantityBar *thirstQuantity;
+    FTQuantityBar *bladderQuantity;
         
     CGPoint dragStartLocation;
     NSTimeInterval tapTime;

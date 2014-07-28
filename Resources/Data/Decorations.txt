@@ -25,12 +25,19 @@
       "collisionrect": "{{0, 0}, {120, 36}}",
       "use": {
         "usestyle": "sequential",
-        "usepositions": [
-          "{0,-25}",
-          "{-15,-18}"
+        "usepositionsets":[
+          [
+            "{0,-25}",
+            "{-15,-18}"
+          ],
+          [
+            "{0,-25}",
+            "{15,-18}"
+          ]
         ],
         "userotation": 0,
-        "usetime": 2.5
+        "usetime": 2.5,
+        "maxusers": 2
       }
     },
     {
@@ -41,11 +48,18 @@
       "trigger": "onuse",
       "use": {
         "usestyle": "sequential",
-        "usepositions": [
-          "{0,-24}",
-          "{-10,-6}"
+        "usepositionsets": [
+          [
+            "{0,-24}",
+            "{-10,-6}"
+          ],
+          [
+            "{0,-24}",
+            "{10,-6}"
+          ]
         ],
-        "userotation": 180
+        "userotation": 180,
+        "maxusers": 2
       }
     },
     {
@@ -61,7 +75,9 @@
           "{0, -6}"
         ],
         "userotation": 0,
-        "usetime": 3
+        "toilet": "T",
+        "usetime": 3,
+        "maxusers": 1
       }
     },
     {
@@ -78,7 +94,9 @@
           "{0, 6}"
         ],
         "userotation": 0,
+        "toilet": "T",
         "usetime": 3,
+        "maxusers": 1,
         "particles": {
           "position": "{0,-22}",
           "startcolor": 0
@@ -106,7 +124,18 @@
       "name": "keg",
       "displayname": "Keg",
       "displayrect": "{{192, 384}, {52, 52}}",
-      "collisioncircle": "{{0, 0}, {11, 0}}"
+      "collisioncircle": "{{0, 0}, {11, 0}}",
+      "use": {
+        "usestyle": "getdrink",
+        "useposition": "{0, 20}",
+        "userotation": 180,
+        "usetime": 2.0,
+        "maxusers": 2,
+        "drinks": {
+          "drinktype": "cup",
+          "drinkcount": 100
+        },
+      }
     },
     {
       "name": "barstraight",
@@ -145,7 +174,8 @@
           "{-30, 9}",
           "{-44, 4}",
           "{-49, -10}"
-        ]
+        ],
+        "maxusers": 1
       }
     },
     {
@@ -162,7 +192,8 @@
           "{-30, -9}",
           "{49, -9}"
         ],
-        "userotation": 90
+        "userotation": 90,
+        "maxusers": 1
       }
     },
     {
@@ -179,11 +210,12 @@
         "usestyle": "getdrink",
         "useposition": "{-20, 0}",
         "userotation": 90,
-        "usetime": 2.0
-      },
-      "drinks": {
-        "drinktype": "mixed",
-        "drinkcount": 100
+        "usetime": 2.0,
+        "drinks": {
+          "drinktype": "cup",
+          "drinkcount": 100
+        },
+        "maxusers": 2
       }
     },
     {
@@ -195,12 +227,14 @@
         "usestyle": "getdrink",
         "useposition": "{-30, 0}",
         "userotation": 90,
-        "usetime": 0.5
+        "usetime": 0.5,
+        "maxusers": 2,
+        "drinks": {
+          "drinktype": "can",
+          "drinkcount": 200
+        }
       },
-      "drinks": {
-        "drinktype": "can",
-        "drinkcount": 200
-      }
+
     }
   ]
 }

@@ -22,6 +22,7 @@
 @synthesize drinkContainers;
 @synthesize debugNode;
 @synthesize houseNode;
+@synthesize decorationNode;
 
 - (id)init{
     self = [super init];
@@ -34,9 +35,12 @@
         [space setGravity: ccp(0, -10)];
         [space setIterations: 3];
         
-        //self.debugNode = [[FTPhysicsDebugNode alloc] init];
-        //[debugNode setSpace: space];
-        //[self addChild: debugNode z: 1000];
+        [space addCollisionHandler:self typeA:PERSON_COLLISION_TYPE typeB:PERSON_COLLISION_TYPE begin:@selector(collisionPersonPersonBegin:space:userData:) preSolve:@selector(collisionPersonPersonPreSolve:space:userData:) postSolve:nil separate:@selector(collisionPersonPersonSeparate:space:userData:)];
+        [space addCollisionHandler:self typeA:PERSON_COLLISION_TYPE typeB:DECORATION_COLLISION_TYPE begin:@selector(collisionPersonDecorationBegin:space:userData:) preSolve:nil postSolve:nil separate:nil];
+        
+        /*self.debugNode = [[FTPhysicsDebugNode alloc] init];
+        [debugNode setSpace: space];
+        [self addChild: debugNode z: 1000];*/
         
         //[space addCollisionHandler:self typeA:PERSON_COLLISION_TYPE typeB:PERSON_COLLISION_TYPE begin:@selector(personCollision:arbiter:space:) preSolve:@selector(personCollision:arbiter:space:) postSolve:@selector(personCollision:arbiter:space:) separate:@selector(personCollision:arbiter:space:)];
         
@@ -104,10 +108,20 @@
         
         [self scheduleOnce:@selector(spawnPeople) delay:0.05f];
         [self scheduleOnce:@selector(resetTargetBodies) delay:2.0f];
+        [self schedule:@selector(printInfo) interval:0.2f repeat:CCTimerRepeatForever delay:0.0f];
         
         contactTimes = [[NSMutableDictionary alloc] init];
     }
     return self;
+}
+
+bool checkPersonIndex(int personInd, int numPeople){
+    if(personInd < numPeople && personInd >= 0){
+        return YES;
+    }else{
+        NSLog(@"PersonIndex %i out of bounds", personInd);
+        return NO;
+    }
 }
 
 - (void)spawnPeople{
@@ -130,20 +144,18 @@
 }
 
 - (void)personChangeState:(int)personInd newState:(FTPersonState *)newState{
-    if(personInd < personIndex && personInd >= 0){
+    if(checkPersonIndex(personInd, personIndex)){
         NSLog(@"Changing person %i to state %@", personInd, [newState stateName]);
         [[peopleData objectAtIndex: personInd] setObject:newState forKey:@"currentState"];
         [newState setPersonIndex: personInd];
         [newState setPeopleNode: self];
         [newState setPersonData: [peopleData objectAtIndex: personInd]];
         [newState prepare];
-    }else{
-        NSLog(@"PersonIndex %i out of bounds", personInd);
     }
 }
 
 - (void)personWalkTo:(int)personInd point:(CGPoint)point{
-    if(personInd < personIndex && personInd >= 0){
+    if(checkPersonIndex(personInd, personIndex)){
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
         dispatch_async(queue, ^{
             NSArray *points = [self pointsForPersonWalkTo:personInd point:point];
@@ -155,8 +167,6 @@
             });
         });
         
-    }else{
-        NSLog(@"PersonIndex %i out of bounds", personInd);
     }
 }
 
@@ -170,63 +180,88 @@
     }
 }
 
-- (void)personUseDecoration:(int)personInd decorationDict:(NSDictionary *)decDict walkToStart:(BOOL)walkToStart{
-    if(personInd < personIndex && personInd >= 0){
+- (void)personUseDecoration:(int)personInd decorationDict:(NSMutableDictionary *)decDict walkToStart:(BOOL)walkToStart{
+    if(checkPersonIndex(personInd, personIndex)){
         if([decDict objectForKey: @"use"] != nil){
-            int rot = [(CCSprite *)[decDict objectForKey: @"sprite"] rotation];
-            int scaleX = [(CCSprite *)[decDict objectForKey: @"sprite"] scaleX];
-            int scaleY = [(CCSprite *)[decDict objectForKey: @"sprite"] scaleY];
-            CGPoint pos = [(CCSprite *)[decDict objectForKey: @"sprite"] position];
+            int numUsers = [[decDict objectForKey: @"numusers"] intValue];
+            int maxUsers = [[[decDict objectForKey: @"use"] objectForKey: @"maxusers"] intValue];
             
-            if([[[decDict objectForKey: @"use"] objectForKey: @"usestyle"] isEqualToString: @"sequential"] || [[[decDict objectForKey: @"use"] objectForKey: @"usestyle"] isEqualToString: @"sequential-link"]){
-                NSArray *usePositions = [[decDict objectForKey: @"use"] objectForKey: @"usepositions"];
-                if(usePositions){
-                    CGPoint startingPoint = CGPointFromString([usePositions objectAtIndex: 0]);
-                    startingPoint = [self transformPoint:startingPoint decRot:rot decSX:scaleX decSY:scaleY decPos:pos];
+            if(numUsers < maxUsers){
+                int rot = [(CCSprite *)[decDict objectForKey: @"sprite"] rotation];
+                int scaleX = [(CCSprite *)[decDict objectForKey: @"sprite"] scaleX];
+                int scaleY = [(CCSprite *)[decDict objectForKey: @"sprite"] scaleY];
+                CGPoint pos = [(CCSprite *)[decDict objectForKey: @"sprite"] position];
+                
+                numUsers++;
+                [decDict setObject:@(numUsers) forKey:@"numusers"];
+                
+                if([[[decDict objectForKey: @"use"] objectForKey: @"usestyle"] isEqualToString: @"sequential"] || [[[decDict objectForKey: @"use"] objectForKey: @"usestyle"] isEqualToString: @"sequential-link"]){
+                    NSArray *usePositionSets = [[decDict objectForKey: @"use"] objectForKey: @"usepositionsets"];
+                    NSArray *usePositions = nil;
                     
+                    if(usePositionSets != nil){
+                        int numusers = [[decDict objectForKey: @"numusers"] intValue];
+                        usePositions = [usePositionSets objectAtIndex: numusers - 1];
+                    }else{
+                        usePositions = [[decDict objectForKey: @"use"] objectForKey: @"usepositions"];
+                    }
+
+                    if(usePositions){
+                        CGPoint startingPoint = CGPointFromString([usePositions objectAtIndex: 0]);
+                        startingPoint = [self transformPoint:startingPoint decRot:rot decSX:scaleX decSY:scaleY decPos:pos];
+                        
+                        if(walkToStart){
+                            dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+                            dispatch_async(queue, ^{
+                                NSArray *points = [self pointsForPersonWalkTo:personInd point:startingPoint];
+                                dispatch_sync(dispatch_get_main_queue(), ^{
+                                    if(points != nil){
+                                        FTUsingSequentialState *usingState = [[FTUsingSequentialState alloc] initWithDecorationDict: decDict];
+                                        FTWalkingState *walkingState = [[FTWalkingState alloc] initWithPointArray: points];
+                                        [walkingState setNextState: usingState];
+                                        [self personChangeState:personInd newState:walkingState];
+                                    }
+                                });
+                            });
+                        }else{
+                            FTUsingSequentialState *usingState = [[FTUsingSequentialState alloc] initWithDecorationDict: decDict];
+                            [self personChangeState:personInd newState:usingState];
+                        }
+                    }
+                }else if([[[decDict objectForKey: @"use"] objectForKey: @"usestyle"] isEqualToString: @"getdrink"]){
+                    CGPoint usePosition = CGPointFromString([[decDict objectForKey: @"use"] objectForKey: @"useposition"]);
+                    
+                    CGPoint startingPoint = [self transformPoint:usePosition decRot:rot decSX:scaleX decSY:scaleY decPos:pos];
                     if(walkToStart){
                         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
                         dispatch_async(queue, ^{
                             NSArray *points = [self pointsForPersonWalkTo:personInd point:startingPoint];
                             dispatch_sync(dispatch_get_main_queue(), ^{
                                 if(points != nil){
-                                    FTUsingSequentialState *usingState = [[FTUsingSequentialState alloc] initWithDecorationDict: decDict];
+                                    FTGettingDrinkState *drinkState = [[FTGettingDrinkState alloc] initWithDecorationDict: decDict];
                                     FTWalkingState *walkingState = [[FTWalkingState alloc] initWithPointArray: points];
-                                    [walkingState setNextState: usingState];
+                                    [walkingState setNextState: drinkState];
                                     [self personChangeState:personInd newState:walkingState];
                                 }
                             });
                         });
                     }else{
-                        FTUsingSequentialState *usingState = [[FTUsingSequentialState alloc] initWithDecorationDict: decDict];
-                        [self personChangeState:personInd newState:usingState];
+                        FTGettingDrinkState *drinkState = [[FTGettingDrinkState alloc] initWithDecorationDict: decDict];
+                        [self personChangeState:personInd newState:drinkState];
                     }
-                }
-            }else if([[[decDict objectForKey: @"use"] objectForKey: @"usestyle"] isEqualToString: @"getdrink"]){
-                CGPoint usePosition = CGPointFromString([[decDict objectForKey: @"use"] objectForKey: @"useposition"]);
-                
-                CGPoint startingPoint = [self transformPoint:usePosition decRot:rot decSX:scaleX decSY:scaleY decPos:pos];
-                if(walkToStart){
-                    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
-                    dispatch_async(queue, ^{
-                        NSArray *points = [self pointsForPersonWalkTo:personInd point:startingPoint];
-                        dispatch_sync(dispatch_get_main_queue(), ^{
-                            if(points != nil){
-                                FTGettingDrinkState *drinkState = [[FTGettingDrinkState alloc] initWithDecorationDict: decDict];
-                                FTWalkingState *walkingState = [[FTWalkingState alloc] initWithPointArray: points];
-                                [walkingState setNextState: drinkState];
-                                [self personChangeState:personInd newState:walkingState];
-                            }
-                        });
-                    });
-                }else{
-                    FTGettingDrinkState *drinkState = [[FTGettingDrinkState alloc] initWithDecorationDict: decDict];
-                    [self personChangeState:personInd newState:drinkState];
                 }
             }
         }
-    }else{
-        NSLog(@"PersonIndex %i out of bounds", personInd);
+    }
+}
+
+- (void)personTakeDrink:(int)personInd drinkType:(FTDrinkSpriteType)type from:(CGPoint)from to:(CGPoint)to{
+    if(checkPersonIndex(personInd, personIndex)){
+        [peopleData[personInd] setObject:[NSValue valueWithCGPoint:from] forKey:@"drinkOffset"];
+        [peopleData[personInd] setObject:[NSValue valueWithCGPoint:to] forKey:@"desiredDrinkOffset"];
+        [peopleData[personInd] setObject:@(CFAbsoluteTimeGetCurrent()) forKey:@"drinkStartTime"];
+        [peopleData[personInd] setObject:@(1.0) forKey:@"drinkAmountLeft"];
+        [(FTDrinkSprite *)[peopleData[personInd] objectForKey:@"drinkSprite"] setType: type];
     }
 }
 
@@ -250,7 +285,7 @@
 }
 
 - (void)personSetSelected:(int)personInd selected:(BOOL)selected{
-    if(personInd < personIndex && personInd >= 0){
+    if(checkPersonIndex(personInd, personIndex)){
         [[peopleData objectAtIndex: personInd] setObject:[NSNumber numberWithBool:selected] forKey:@"selected"];
         CCSprite *selectionSprite = (CCSprite *)[[peopleData objectAtIndex: personInd] objectForKey: @"selectionSprite"];
         if(selected){
@@ -260,18 +295,60 @@
             [selectionSprite setOpacity: 1];
             [selectionSprite runAction: [CCActionFadeOut actionWithDuration: 0.3f]];
         }
-    }else{
-        NSLog(@"PersonIndex %i out of bounds", personInd);
     }
 }
 
 - (NSDictionary *)personGetData:(int)personInd{
-    if(personInd < personIndex && personInd >= 0){
+    if(checkPersonIndex(personInd, personIndex)){
         return [peopleData objectAtIndex: personInd];
-    }else{
-        NSLog(@"PersonIndex %i out of bounds", personInd);
     }
     return nil;
+}
+
+- (int)thirstyPersonIndex{
+    int attempts = 0;
+    while(attempts != personIndex){
+        int indexTry = CCRANDOM_0_1() * personIndex;
+        FTPersonState *state = [peopleData[indexTry] objectForKey: @"currentState"];
+        if([state isKindOfClass: [FTStandingState class]]){
+            float thirst = [[peopleData[indexTry] objectForKey: @"thirst"] floatValue];
+            if(thirst >= 0.7f)
+                return indexTry;
+        }
+        
+        attempts++;
+    }
+    return -1;
+}
+
+- (int)fullBladderPersonIndex{
+    int attempts = 0;
+    while(attempts != personIndex){
+        int indexTry = CCRANDOM_0_1() * personIndex;
+        FTPersonState *state = [peopleData[indexTry] objectForKey: @"currentState"];
+        if([state isKindOfClass: [FTStandingState class]]){
+            float bladder = [[peopleData[indexTry] objectForKey: @"bladder"] floatValue];
+            if(bladder >= 0.8f)
+                return indexTry;
+        }
+        
+        attempts++;
+    }
+    return -1;
+}
+
+- (int)idlePersonIndex{
+    int attempts = 0;
+    while(attempts != personIndex){
+        int indexTry = CCRANDOM_0_1() * personIndex;
+        FTPersonState *state = [peopleData[indexTry] objectForKey: @"currentState"];
+        if([state isKindOfClass: [FTStandingState class]]){
+            return indexTry;
+        }
+        
+        attempts++;
+    }
+    return -1;
 }
 
 - (void)addRandomPersonAt:(CGPoint)pt{
@@ -293,13 +370,20 @@
     [selectionSprite setPosition: pt];
     [selectionSprite setOpacity: 0];
     [selectionSprite setScale: 4.0f / 3.0f];
+    [selectionSprite runAction: [CCActionRepeatForever actionWithAction: [CCActionSequence actionOne:[CCActionScaleTo actionWithDuration:0.4 scale:4.4f/3.0f] two:[CCActionScaleTo actionWithDuration:0.4 scale:4.0f/3.0f]]]];
     [sprites addChild: selectionSprite z:4];
+    
+    FTDrinkSprite *drinkSprite = [[FTDrinkSprite alloc] init];
+    [drinkSprite setVisible: NO];
+    [sprites addChild: drinkSprite z:5];
     
     ChipmunkBody *body = [ChipmunkBody bodyWithMass:5 andMoment:cpMomentForCircle(5, 0, 7, cpvzero)];
     ChipmunkShape *shape = [ChipmunkCircleShape circleWithBody:body radius:7 offset:cpvzero];
     ChipmunkBody *staticBody = [ChipmunkBody staticBody];
     ChipmunkShape *staticShape = [ChipmunkCircleShape circleWithBody:staticBody radius:0.0f offset:cpvzero];
     [staticShape setSensor: YES];
+    
+    [shape setCollisionType: PERSON_COLLISION_TYPE];
     
     [body setPosition: pt];
     [staticBody setPosition: pt];
@@ -332,10 +416,17 @@
     [personData setValue:[NSNumber numberWithFloat:(int)(CCRANDOM_0_1() * 3) / 10.0f] forKey:@"sickness"];
     [personData setValue:[NSNumber numberWithFloat:(int)(CCRANDOM_0_1() * 10) / 10.0f] forKey:@"hotness"];
     [personData setValue:[NSNumber numberWithFloat:(int)(CCRANDOM_0_1() * 10) / 10.0f] forKey:@"intelligence"];
+    [personData setValue:[NSNumber numberWithFloat:(int)(CCRANDOM_0_1() * 10) / 10.0f] forKey:@"thirst"];
+    [personData setValue:[NSNumber numberWithFloat:(int)(CCRANDOM_0_1() * 10) / 10.0f] forKey:@"bladder"];
     [personData setObject:feetSprite forKey:@"feetSprite"];
     [personData setObject:bodySprite forKey:@"bodySprite"];
     [personData setObject:headSprite forKey:@"headSprite"];
     [personData setObject:selectionSprite forKey:@"selectionSprite"];
+    [personData setObject:drinkSprite forKey:@"drinkSprite"];
+    [personData setObject:[NSValue valueWithCGPoint: ccp(0, 8)] forKey:@"drinkOffset"];
+    [personData setObject:[NSValue valueWithCGPoint: ccp(0, 8)] forKey:@"desiredDrinkOffset"];
+    [personData setObject:@(0.0) forKey:@"drinkStartTime"];
+    [personData setObject:@(CCRANDOM_0_1()) forKey:@"drinkAmountLeft"];
     [personData setObject:[NSNumber numberWithBool: NO] forKey:@"selected"];
     [personData setObject:[NSNumber numberWithBool: NO] forKey:@"animatingFeet"];
     [personData setObject:shape forKey:@"shape"];
@@ -348,12 +439,13 @@
     personIndex = (int)[peopleData count];
     
     FTStandingState *standingState = [[FTStandingState alloc] initWithTargetLocation: pt];
+    standingState.bodyLookAtPoint = ccp(pt.x + 5 * CCRANDOM_MINUS1_1(), pt.y + 5 * CCRANDOM_MINUS1_1());
     [self personChangeState:personIndex - 1 newState:standingState];
     
 }
 
 - (void)createPhysicsBounds{
-    for(NSMutableDictionary *decoration in [[houseNode decorationNode] decorations]){
+    for(NSMutableDictionary *decoration in [decorationNode decorations]){
         if([decoration objectForKey:@"collision"] == nil || ([[decoration objectForKey:@"collision"] isEqualToString:@"YES"])){
             if([decoration objectForKey:@"collisionrect"] != nil){
                 CGRect collisionRect = CGRectFromString([decoration objectForKey:@"collisionrect"]);
@@ -363,6 +455,8 @@
                 if(decorationSprite != nil){
                     ChipmunkBody *decBody = [ChipmunkBody staticBody];
                     ChipmunkShape *decShape = [ChipmunkPolyShape boxWithBody:decBody width:collisionRect.size.width height:collisionRect.size.height radius:0];
+                    
+                    [decShape setCollisionType: DECORATION_COLLISION_TYPE];
                     
                     [decBody setPosition: [decorationSprite position]];
                     [decBody setAngle: CC_DEGREES_TO_RADIANS([decorationSprite rotation])];
@@ -379,6 +473,8 @@
                     ChipmunkBody *decBody = [ChipmunkBody staticBody];
                     ChipmunkShape *decShape = [ChipmunkCircleShape circleWithBody:decBody radius:collisionCircle.size.width offset:cpvzero];
                     
+                    [decShape setCollisionType: DECORATION_COLLISION_TYPE];
+
                     [decBody setPosition: [decorationSprite position]];
                     [decBody setAngle: CC_DEGREES_TO_RADIANS([decorationSprite rotation])];
 
@@ -420,7 +516,10 @@
                     CGPoint rectCenter = ccpAdd(ccp(x*12, ([[houseNode structureNode] height] * 12) - y*12 - 6), ccp(contiguousBlocks * 6, 0));
                     ChipmunkBody *rectBody = [ChipmunkBody staticBody];
                     ChipmunkShape *rectShape = [ChipmunkPolyShape boxWithBody:rectBody width:contiguousBlocks * 12 height:12 radius:0];
+                    
+                    [rectShape setCollisionType: STATIC_COLLISION_TYPE];
                     [rectBody setPosition: rectCenter];
+                    
                     [space add: rectBody];
                     [space add: rectShape];
                     
@@ -450,7 +549,10 @@
                     
                     ChipmunkBody *rectBody = [ChipmunkBody staticBody];
                     ChipmunkShape *rectShape = [ChipmunkPolyShape boxWithBody:rectBody width:12 height:contiguousBlocks * 12 radius:0];
+
+                    [rectShape setCollisionType: STATIC_COLLISION_TYPE];
                     [rectBody setPosition: rectCenter];
+                    
                     [space add: rectBody];
                     [space add: rectShape];
 
@@ -466,13 +568,154 @@
             if(!usedBlocks[y][x] && [[houseNode structureNode] tileAt:x y:y]->type){
                 ChipmunkBody *rectBody = [ChipmunkBody staticBody];
                 ChipmunkShape *rectShape = [ChipmunkPolyShape boxWithBody:rectBody width:12 height:12 radius:0];
+                
+                [rectShape setCollisionType: STATIC_COLLISION_TYPE];
                 [rectBody setPosition: ccp(x*12 + 6, ([[houseNode structureNode] height] * 12) - y*12 - 6)];
+              
                 [space add: rectShape];
                 [space add: rectBody];
 
                 //cpShapeSetCollisionType(rect, STATIC_COLLISION_TYPE);
                 usedBlocks[y][x] = YES;
             }
+        }
+    }
+}
+
+- (BOOL)collisionPersonDecorationBegin:(cpArbiter *)arb space:(cpSpace *)space userData:(cpDataPointer *)userData{
+    cpShape *a, *b = nil;
+    cpArbiterGetShapes(arb, &a, &b);
+
+    NSMutableDictionary *personData = nil;
+    NSMutableDictionary *decDict = nil;
+    
+    cpCollisionType typeA = cpShapeGetCollisionType(a);
+    
+    if([typeA isEqualToString: PERSON_COLLISION_TYPE]){
+        for(int x = 0; x < personIndex; x++){
+            if([[peopleData[x] objectForKey: @"shape"] shape] == a){
+                personData = peopleData[x];
+            }
+        }
+        
+        for(NSMutableDictionary *dec in [decorationNode decorations]){
+            if([[dec objectForKey: @"collisionshape"] shape] == b){
+                decDict = dec;
+            }
+        }
+    }else{
+        for(int x = 0; x < personIndex; x++){
+            if([[peopleData[x] objectForKey: @"shape"] shape] == b){
+                personData = peopleData[x];
+            }
+        }
+        
+        for(NSMutableDictionary *dec in [decorationNode decorations]){
+            if([[dec objectForKey: @"collisionshape"] shape] == a){
+                decDict = dec;
+            }
+        }
+    }
+    
+    if(personData != nil && decDict != nil){
+        FTPersonState *currentState = [personData objectForKey: @"currentState"];
+        if([currentState isKindOfClass: [FTUsingState class]]){
+            NSMutableDictionary *dec = [(FTUsingState *)currentState decDict];
+            if(dec == decDict)
+                return NO;
+        }
+    }else{
+        NSLog(@"Couldn't find a person or dec for collision.");
+    }
+    
+    return YES;
+}
+
+- (BOOL)collisionPersonPersonBegin:(cpArbiter *)arb space:(cpSpace *)space userData:(cpDataPointer *)userData{
+    cpShape *a, *b = NULL;
+    cpArbiterGetShapes(arb, &a, &b);
+    int whichPersonA = -1;
+    int whichPersonB = -1;
+    for(int x = 0; x < personIndex; x++){
+        cpShape *shape = [[peopleData[x] objectForKey:@"shape"] shape];
+        if(shape == a)
+            whichPersonA = x;
+        else if(shape == b)
+            whichPersonB = x;
+    }
+    
+    if(whichPersonA == -1 || whichPersonB == -1){
+        NSLog(@"Failed to find a person for shape.");
+    }else{
+        NSString *pairString = NSStringFromCGPoint(ccp(whichPersonA, whichPersonB));
+        NSString *oppositePairString = NSStringFromCGPoint(ccp(whichPersonB, whichPersonA));
+        
+        if([contactTimes objectForKey:pairString] == nil && [contactTimes objectForKey:oppositePairString] == nil)
+            [contactTimes setObject:[NSNumber numberWithDouble: CFAbsoluteTimeGetCurrent()] forKey:pairString];
+        
+    }
+    return YES;
+}
+
+- (BOOL)collisionPersonPersonPreSolve:(cpArbiter *)arb space:(cpSpace *)space userData:(cpDataPointer *)userData{
+    cpShape *a, *b = NULL;
+    cpArbiterGetShapes(arb, &a, &b);
+    int whichPersonA = -1;
+    int whichPersonB = -1;
+    for(int x = 0; x < personIndex; x++){
+        if([[peopleData[x] objectForKey:@"shape"] shape] == a)
+            whichPersonA = x;
+        else if([[peopleData[x] objectForKey:@"shape"] shape] == b)
+            whichPersonB = x;
+    }
+    
+    if(whichPersonA == -1 || whichPersonB == -1){
+        NSLog(@"Failed to find a person for shape.");
+        return YES;
+    }else{
+        NSString *pairString = NSStringFromCGPoint(ccp(whichPersonA, whichPersonB));
+        NSString *oppositePairString = NSStringFromCGPoint(ccp(whichPersonB, whichPersonA));
+        
+        BOOL ignoreCollision = NO;
+        if([contactTimes objectForKey:pairString] != nil){
+            CFAbsoluteTime contactLife = CFAbsoluteTimeGetCurrent() - [[contactTimes objectForKey: pairString] doubleValue];
+            if(contactLife > 0.2f && contactLife < 1.2f)
+                ignoreCollision = YES;
+            
+            
+        }else if([contactTimes objectForKey: oppositePairString]){
+            CFAbsoluteTime contactLife = CFAbsoluteTimeGetCurrent() - [[contactTimes objectForKey: oppositePairString] doubleValue];
+            if(contactLife > 0.2f && contactLife < 1.2f)
+                ignoreCollision = YES;
+        }
+        
+        return !ignoreCollision;
+    }
+}
+
+- (void)collisionPersonPersonSeparate:(cpArbiter *)arb space:(cpSpace *)space userData:(cpDataPointer *)userData{
+    cpShape *a, *b = NULL;
+    cpArbiterGetShapes(arb, &a, &b);
+    int whichPersonA = -1;
+    int whichPersonB = -1;
+    for(int x = 0; x < personIndex; x++){
+        if([[peopleData[x] objectForKey:@"shape"] shape] == a)
+            whichPersonA = x;
+        
+        if([[peopleData[x] objectForKey:@"shape"] shape] == b)
+            whichPersonB = x;
+    }
+    
+    if(whichPersonA == -1 || whichPersonB == -1){
+        NSLog(@"Failed to find a person for shape.");
+    }else{
+        NSString *pairString = NSStringFromCGPoint(ccp(whichPersonA, whichPersonB));
+        NSString *oppositePairString = NSStringFromCGPoint(ccp(whichPersonB, whichPersonA));
+        
+        if([contactTimes objectForKey:pairString] != nil){
+            [contactTimes removeObjectForKey: pairString];
+        }else if([contactTimes objectForKey:oppositePairString] != nil){
+            [contactTimes removeObjectForKey:oppositePairString];
         }
     }
 }
@@ -579,8 +822,8 @@
     if(whichPerson == -1){
         NSLog(@"Failed to find a person for shape.");
     }else{
-        for(int x = 0; x < [[[houseNode decorationNode] decorations] count]; x++){
-            NSDictionary *decDict = [[[houseNode decorationNode] decorations] objectAtIndex: x];
+        for(int x = 0; x < [[decorationNode decorations] count]; x++){
+            NSDictionary *decDict = [[decorationNode decorations] objectAtIndex: x];
             if([[decDict valueForKey: @"collisionshape"] pointerValue] == decoration){
                 if([[peopleData objectAtIndex: whichPerson] objectForKey:@"useDecoration"] != nil && [[peopleData objectAtIndex: whichPerson] objectForKey:@"useDecoration"] == decDict){
                     return NO;
@@ -678,21 +921,64 @@
     CCParticleSystem *system = [[CCParticleSystem alloc] initWithTotalParticles: 100];
     
 }
+
+- (void)printInfo{
+    int numStanding = 0, numWalking = 0, numUsing = 0;
+    
+    for(int x = 0; x < personIndex; x++){
+        FTPersonState *currentState = [[peopleData objectAtIndex: x] objectForKey: @"currentState"];
+        
+        if([currentState isKindOfClass: [FTStandingState class]])
+            numStanding++;
+        if([currentState isKindOfClass: [FTWalkingState class]])
+            numWalking++;
+        if([currentState isKindOfClass: [FTUsingState class]])
+            numUsing++;
+    }
+    
+    NSLog(@"Standing: %i, Walking: %i, Using: %i", numStanding, numWalking, numUsing);
+}
     
 - (void)update:(CCTime)delta{
     NSTimeInterval start = CFAbsoluteTimeGetCurrent();
     [space step: delta];
     start = CFAbsoluteTimeGetCurrent();
+    
+    /*if([[contactTimes allKeys] count]){
+        NSLog(@"Contact times: ");
+        for(NSString *pair in [contactTimes allKeys]){
+            NSLog(@"[%@] : %@", pair, [contactTimes objectForKey: pair]);
+        }
+    }*/
+
+    for(NSMutableDictionary *dec in [decorationNode decorations]){
+        if([dec objectForKey: @"use"] != nil){
+            int currentUsers = [[dec objectForKey: @"numusers"] intValue];
+            int maxUsers = [[[dec objectForKey: @"use"] objectForKey: @"maxusers"] intValue];
+
+            if(currentUsers < maxUsers){
+                if([[dec objectForKey: @"use"] objectForKey: @"drinks"] != nil){
+                    int thirstyPersonIndex = [self thirstyPersonIndex];
+                    if(thirstyPersonIndex != -1){
+                        [self personUseDecoration:thirstyPersonIndex decorationDict:dec walkToStart:YES];
+                    }
+                }else if([[dec objectForKey: @"use"] objectForKey: @"toilet"] != nil){
+                    int fullBladderPersonIndex = [self fullBladderPersonIndex];
+                    if(fullBladderPersonIndex != -1){
+                        [self personUseDecoration:fullBladderPersonIndex decorationDict:dec walkToStart:YES];
+                    }
+                }
+            }
+            
+        }
+    }
+    
     for(int x = 0; x < personIndex; x++){
         ChipmunkShape *personShape = [[peopleData objectAtIndex: x] objectForKey:@"shape"];
         ChipmunkBody *personBody = [personShape body];
-
-        [(CCSprite *)[[peopleData objectAtIndex: x] objectForKey:@"feetSprite"] setPosition: [personBody position]];
-        [(CCSprite *)[[peopleData objectAtIndex: x] objectForKey:@"bodySprite"] setPosition: [personBody position]];
-        [(CCSprite *)[[peopleData objectAtIndex: x] objectForKey:@"headSprite"] setPosition: [personBody position]];
-        [(CCSprite *)[[peopleData objectAtIndex: x] objectForKey:@"selectionSprite"] setPosition: [personBody position]];
-        
         [personBody activate];
+
+        CGPoint pos = [personBody position];
         
         if(ccpLength([personBody velocity]) > 2.0f && [[[peopleData objectAtIndex: x] objectForKey:@"animatingFeet"] boolValue] == NO){
             float velocityAngle = 90 - CC_RADIANS_TO_DEGREES(atan2f([personBody velocity].y, [personBody velocity].x));
@@ -708,22 +994,73 @@
         
         FTPersonState *currentState = [[peopleData objectAtIndex: x] objectForKey: @"currentState"];
         
-        [currentState update];
+        [currentState update: delta];
         
         CGPoint bodyLookAtPoint = [currentState bodyLookAtPoint];
         CGPoint headLookAtPoint = [currentState headLookAtPoint];
         
-        float bodyLookAtAngle = 90 - CC_RADIANS_TO_DEGREES(atan2f(bodyLookAtPoint.y - [personBody position].y, bodyLookAtPoint.x - [personBody position].x));
-        float headLookAtAngle = 90 - CC_RADIANS_TO_DEGREES(atan2f(headLookAtPoint.y - [personBody position].y, headLookAtPoint.x - [personBody position].x));
+        float bodyLookAtAngle = 90 - CC_RADIANS_TO_DEGREES(atan2f(bodyLookAtPoint.y - pos.y, bodyLookAtPoint.x - pos.x));
+        float headLookAtAngle = 90 - CC_RADIANS_TO_DEGREES(atan2f(headLookAtPoint.y - pos.y, headLookAtPoint.x - pos.x));
         
-        CCSprite *feetSprite = [[peopleData objectAtIndex: x] objectForKey:@"feetSprite"];
-        CCSprite *bodySprite = [[peopleData objectAtIndex: x] objectForKey:@"bodySprite"];
-        CCSprite *headSprite = [[peopleData objectAtIndex: x] objectForKey:@"headSprite"];
+        CCSprite *feetSprite = [peopleData[x] objectForKey:@"feetSprite"];
+        CCSprite *bodySprite = [peopleData[x] objectForKey:@"bodySprite"];
+        CCSprite *headSprite = [peopleData[x] objectForKey:@"headSprite"];
+        CCSprite *selectionSprite = [peopleData[x] objectForKey:@"selectionSprite"];
+        FTDrinkSprite *drinkSprite = [peopleData[x] objectForKey:@"drinkSprite"];
         
+        [feetSprite setPosition: pos];
+        [bodySprite setPosition: pos];
+        [headSprite setPosition: pos];
+        [selectionSprite setPosition: pos];
+        [drinkSprite setPosition: pos];
+        
+        CGPoint drinkOffset = [[peopleData[x] objectForKey:@"drinkOffset"] CGPointValue];
+        CGPoint desiredDrinkOffset = [[peopleData[x] objectForKey:@"desiredDrinkOffset"] CGPointValue];
+        
+        NSTimeInterval drinkStartMove = [[peopleData[x] objectForKey:@"drinkStartTime"] doubleValue];
+        float t = 2 * min(CFAbsoluteTimeGetCurrent() - drinkStartMove, 0.5f);
+        
+        drinkOffset = cpvlerp(drinkOffset, desiredDrinkOffset, t);
+        
+        float newBodyRotation = [self rotateTowards:bodyLookAtAngle current:[bodySprite rotation] turnSpeed:180 * delta];
+        drinkOffset = ccpRotateByAngle(drinkOffset, CGPointZero, CC_DEGREES_TO_RADIANS(-newBodyRotation));
+        [drinkSprite setPosition: ccpAdd(pos, drinkOffset)];
+        
+        float amountLeft = [[peopleData[x] objectForKey:@"drinkAmountLeft"] floatValue];
+
+        if(amountLeft > 0){
+            float amountDrank = 0.25 * delta;
+            amountLeft = max(amountLeft - amountDrank, 0.0f);
+            
+            if([[peopleData[x] objectForKey:@"drinkAmountLeft"] floatValue] > 0 && amountLeft <= 0){
+                FTDrinkSpriteType type = [drinkSprite type];
+                CGPoint startThrowPoint = ccpAdd(pos, ccpMult(ccpNormalize(drinkOffset), 10));
+                CGPoint throwPoint = ccpAdd(pos, ccpMult(ccpNormalize(drinkOffset), CCRANDOM_0_1() * 30 + 15));
+                [[self.houseNode trashNode] addNewTrash:(FTTrashType)type from:startThrowPoint to:throwPoint];
+                [drinkSprite setType: rand() % 3];
+            }
+        
+            float thirst = [[peopleData[x] objectForKey: @"thirst"] floatValue];
+            float bladder = [[peopleData[x] objectForKey: @"bladder"] floatValue];
+            
+            thirst = max(thirst - amountDrank * 0.25f, 0);
+            bladder = min(bladder + amountDrank * 0.5f, 1);
+            
+            [peopleData[x] setObject:@(amountLeft) forKey:@"drinkAmountLeft"];
+            [peopleData[x] setObject:@(thirst) forKey:@"thirst"];
+            [peopleData[x] setObject:@(bladder) forKey:@"bladder"];
+            
+            [drinkSprite setVisible: YES];
+        }else{
+            [drinkSprite setVisible: NO];
+        }
+    
         [feetSprite setRotation: [self rotateTowards:bodyLookAtAngle current:[feetSprite rotation] turnSpeed:240 * delta]];
-        [bodySprite setRotation: [self rotateTowards:bodyLookAtAngle current:[bodySprite rotation] turnSpeed:180 * delta]];
+        [bodySprite setRotation: newBodyRotation];
         [headSprite setRotation: [self rotateTowards:headLookAtAngle current:[headSprite rotation] turnSpeed:360 * delta]];
+        [drinkSprite setRotation: newBodyRotation];
     }
+    
 }
 
 - (float)rotateTowards:(float)wanted current:(float)current turnSpeed:(float)turnSpeed{

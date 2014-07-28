@@ -25,7 +25,7 @@
     return self;
 }
 
-- (void)update{
+- (void)update:(CCTime)delta{
     
 }
 

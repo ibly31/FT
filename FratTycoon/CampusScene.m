@@ -400,7 +400,7 @@ static NSString *letterBackgroundName = @"124";
 
             CCSprite *letterBackground = [CCSprite spriteWithTexture:[CCTexture textureWithFile:@"LettersAtlas.png"] rect:CGRectMake(0, 100, 40, 20)];
             [letterBackground setScaleX: [letters length] / 2.0f];
-            [letterBackground setOpacity: 180];
+            [letterBackground setOpacity: 0.7f];
             [lettersNode addChild: letterBackground z:0 name:letterBackgroundName];
             [lettersNode addChild: letterPointer];
             [lettersNode addChild: lettersLabel z:0 name:letterLabelName];
@@ -462,14 +462,14 @@ static NSString *letterBackgroundName = @"124";
                 CCLabelTTF *nicknameLabel = [[CCLabelTTF alloc] initWithString:[org objectForKey:@"nickname"] fontName:@"Palatino-Bold" fontSize:18.0f];
                 CCSprite *lettersBackground = (CCSprite *)[lettersNode getChildByName: letterBackgroundName recursively: NO];
                 float newScale = 1.15f * [nicknameLabel contentSize].width / [lettersNodeLabel contentSize].width;
-                [lettersBackground runAction: [CCActionEaseSineOut actionWithAction: [CCActionScaleTo actionWithDuration:0.3f scaleX:[[org objectForKey:@"letters"] length] / 2.0f * newScale scaleY:1.0f]]];
-                [lettersBackground runAction: [CCActionFadeTo actionWithDuration:0.3f opacity:255]];
+                [lettersBackground runAction: [CCActionScaleTo actionWithDuration:0.3f scaleX:[[org objectForKey:@"letters"] length] / 2.0f * newScale scaleY:1.0f]];
+                [lettersBackground runAction: [CCActionFadeTo actionWithDuration:0.3f opacity:1.0f]];
                 [lettersNodeLabel runAction: [CCActionScaleTo actionWithDuration:0.3f scaleX:newScale scaleY:-1.0f]];
             }else{
                 CCLabelAtlas *lettersLabel = [[CCLabelAtlas alloc] initWithString:[org objectForKey:@"letters"] charMapFile:@"LettersAtlas.png" itemWidth:20 itemHeight:20 startCharMap:'a'];
                 CCSprite *lettersBackground = (CCSprite *)[lettersNode getChildByName: letterBackgroundName recursively: NO];
-                [lettersBackground runAction: [CCActionEaseSineIn actionWithAction: [CCActionScaleTo actionWithDuration:0.3f scaleX:[[org objectForKey:@"letters"] length] / 2.0f scaleY:1.0f]]];
-                [lettersBackground runAction: [CCActionFadeTo actionWithDuration:0.3f opacity:180]];
+                [lettersBackground runAction: [CCActionScaleTo actionWithDuration:0.3f scaleX:[[org objectForKey:@"letters"] length] / 2.0f scaleY:1.0f]];
+                [lettersBackground runAction: [CCActionFadeTo actionWithDuration:0.3f opacity:0.7f]];
                 [lettersNodeLabel runAction: [CCActionScaleTo actionWithDuration:0.3f scaleX:[lettersLabel contentSize].width / [lettersNodeLabel contentSize].width scaleY:-1.0f]];
             }
         }

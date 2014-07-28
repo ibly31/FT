@@ -6,21 +6,17 @@
 //  Copyright (c) 2014 ibly31apps. All rights reserved.
 //
 
-#import "FTPersonState.h"
+#import "FTUsingState.h"
 
 typedef enum{
     FTGettingDrinkStateStageWalking = 0,
     FTGettingDrinkStateStageGetting
 }FTGettingStateDrinkStage;
 
-@interface FTGettingDrinkState : FTPersonState{
-    NSDictionary *decDict;
-    
+@interface FTGettingDrinkState : FTUsingState{
     FTGettingStateDrinkStage currentStage;
-    
-    NSTimeInterval useStart;
 }
 
-- (id)initWithDecorationDict:(NSDictionary *)dd;
+- (id)initWithDecorationDict:(NSMutableDictionary *)dd;
 
 @end

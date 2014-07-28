@@ -11,9 +11,11 @@
 
 #define MAX_DECORATIONS 100
 
-@interface FTDecorationNode : CCSpriteBatchNode {
+@interface FTDecorationNode : CCNode {
     int width;
     int height;
+    
+    CCSpriteBatchNode *sprites;
     
     NSMutableArray *decorations;
 }
@@ -26,6 +28,7 @@
 
 - (void)clearDecorations;
 - (void)addDecoration:(NSDictionary *)decoration x:(int)x y:(int)y rot:(int)rot flipVertical:(BOOL)flipVertical flipHorizontal:(BOOL)flipHorizontal;
-- (NSDictionary *)decorationFromSequentialLink:(NSDictionary *)decDict;
+- (NSMutableDictionary *)decorationFromSequentialLink:(NSDictionary *)decDict;
+- (NSMutableDictionary *)decorationFromName:(NSString *)name adjacentTo:(NSDictionary *)decDict;
 
 @end

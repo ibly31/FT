@@ -20,13 +20,13 @@
         [background setAnchorPoint: ccp(0,0)];
         [self addChild: background];
         
-        nameLabel = [[CCLabelTTF alloc] initWithString:@"Williamov P." fontName:@"Palatino" fontSize:16.0f];
+        nameLabel = [[CCLabelTTF alloc] initWithString:@"Name" fontName:@"Palatino" fontSize:16.0f];
         [nameLabel setAnchorPoint: ccp(0, 0.5f)];
         [nameLabel setPosition: ccp(26, 31)];
         [nameLabel setHorizontalAlignment: CCTextAlignmentLeft];
         [self addChild: nameLabel];
         
-        personPreviewSprite = [CCSprite spriteWithTexture:[CCTexture textureWithFile:@"PeopleSheet.png"] rect:CGRectMake(150, 0, 48, 48)];
+        personPreviewSprite = [CCSprite spriteWithTexture:[CCTexture textureWithFile:@"PeopleSheet.png"] rect:CGRectMake(150, 15, 48, 48)];
         [personPreviewSprite setPosition: ccp(60, 90)];
         [self addChild: personPreviewSprite];
         
@@ -34,16 +34,22 @@
         intelligenceQuantity = [[FTQuantityBar alloc] initWithFillSpriteNumber: 1];
         happinessQuantity = [[FTQuantityBar alloc] initWithFillSpriteNumber: 2];
         sicknessQuantity = [[FTQuantityBar alloc] initWithFillSpriteNumber: 3];
+        thirstQuantity = [[FTQuantityBar alloc] initWithFillSpriteNumber: 1];
+        bladderQuantity = [[FTQuantityBar alloc] initWithFillSpriteNumber: 2];
         
-        [hotnessQuantity setPosition: ccp(158, 107)];
-        [intelligenceQuantity setPosition: ccp(158, 80)];
-        [happinessQuantity setPosition: ccp(158, 53)];
-        [sicknessQuantity setPosition: ccp(158, 25)];
+        [hotnessQuantity setPosition: ccp(215, 120)];
+        [intelligenceQuantity setPosition: ccp(215, 100)];
+        [happinessQuantity setPosition: ccp(215, 80)];
+        [sicknessQuantity setPosition: ccp(215, 60)];
+        [thirstQuantity setPosition: ccp(215, 40)];
+        [bladderQuantity setPosition: ccp(215, 20)];
         
         [self addChild: hotnessQuantity];
         [self addChild: intelligenceQuantity];
         [self addChild: happinessQuantity];
         [self addChild: sicknessQuantity];
+        [self addChild: thirstQuantity];
+        [self addChild: bladderQuantity];
         
         [self setUserInteractionEnabled: YES];
         [self setContentSize: CGSizeMake(320, 140)];
@@ -56,16 +62,17 @@
 - (void)setDataWithDictionary:(NSDictionary *)personDict{
     [nameLabel setString: [personDict objectForKey: @"name"]];
     if([[personDict valueForKey: @"male"] boolValue] == YES){
-        [personPreviewSprite setTextureRect: CGRectMake(150, 0, 48, 48)];
+        [personPreviewSprite setTextureRect: CGRectMake(150, 15, 48, 48)];
     }else{
-        [personPreviewSprite setTextureRect: CGRectMake(150, 50, 48, 48)];
+        [personPreviewSprite setTextureRect: CGRectMake(150, 65, 48, 48)];
     }
     
     [hotnessQuantity setQuantity: [[personDict valueForKey: @"hotness"] floatValue]];
     [intelligenceQuantity setQuantity: [[personDict valueForKey: @"intelligence"] floatValue]];
     [happinessQuantity setQuantity: [[personDict valueForKey: @"happiness"] floatValue]];
     [sicknessQuantity setQuantity: [[personDict valueForKey: @"sickness"] floatValue]];
-
+    [thirstQuantity setQuantity: [[personDict valueForKey: @"thirst"] floatValue]];
+    [bladderQuantity setQuantity: [[personDict valueForKey: @"bladder"] floatValue]];
 }
 
 - (void)setShowing:(BOOL)sh{

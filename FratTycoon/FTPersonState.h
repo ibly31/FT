@@ -26,6 +26,6 @@
 @property CGPoint headLookAtPoint;
 
 - (void)prepare;
-- (void)update;
+- (void)update:(CCTime)delta;
 
 @end
